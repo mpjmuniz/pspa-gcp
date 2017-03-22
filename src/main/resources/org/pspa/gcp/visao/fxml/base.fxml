@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.input.KeyCodeCombination?>
+<?import javafx.scene.layout.BorderPane?>
+
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml/1"
+	xmlns="http://javafx.com/javafx/8.0.101">
+	<top>
+		<MenuBar fx:id="barraMenus">
+			<menus>
+				<Menu fx:id="mBase" mnemonicParsing="false" text="Listagem">
+					<items>
+						<MenuItem fx:id="mAluno" mnemonicParsing="false" text="Aluno">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="A"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+						<MenuItem fx:id="mFuncionario" mnemonicParsing="false"
+							text="Funcionario">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="F"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+						<MenuItem fx:id="mTurma" mnemonicParsing="true" text="Turma">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="T"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+						<MenuItem fx:id="mQuadro" mnemonicParsing="true" text="Quadro Estrutural">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="Q"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+					</items>
+				</Menu>
+				<Menu fx:id="mRefeicao" mnemonicParsing="false" text="Alimentos">
+					<items>
+						<MenuItem fx:id="mCardapio" mnemonicParsing="false" text="Cardápio">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="C"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+						<MenuItem fx:id="mAlmoxarifado" mnemonicParsing="false" text="Almoxarifado">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="X"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+					</items>
+				</Menu>
+				<Menu fx:id="mInscricao" mnemonicParsing="false" text="Inscriçao">
+					<items>
+						<MenuItem fx:id="mInsAluno" mnemonicParsing="false" text="Aluno">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="I"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+					</items>
+				</Menu>
+				<Menu fx:id="mEditar" mnemonicParsing="false" text="Editar">
+					<items>
+						<MenuItem fx:id="mDesfazer" mnemonicParsing="false" text="Desfazer ">
+							<accelerator>
+								<KeyCodeCombination alt="UP" code="Z"
+									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+					</items>
+				</Menu>
+				<Menu fx:id="mControle" mnemonicParsing="false" text="Controle">
+					<items>
+						<MenuItem fx:id="mFinancas" mnemonicParsing="false" text="Finanças">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="N"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+					</items>
+					<items>
+						<MenuItem fx:id="mDeclaracoes" mnemonicParsing="false" text="Declarações">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="D"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+					</items>
+					<items>
+						<MenuItem fx:id="mDistribuicao" mnemonicParsing="false" text="Distribuição Mensal de Atividades">
+							<accelerator>
+								<KeyCodeCombination alt="DOWN" code="M"
+									control="UP" meta="UP" shift="UP" shortcut="UP" />
+							</accelerator>
+						</MenuItem>
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+	<bottom>
+		<Label fx:id="lAjuda" text="Bem vindo!" />
+		<style>
+		-fx-padding: 10;
+		-fx-text-fill: blue;
+		-fx-font-weight: bold;
+		</style>
+	</bottom>
+</fx:root>
