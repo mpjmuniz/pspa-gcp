@@ -35,7 +35,7 @@ public class TesteRepositorioFuncionario {
 		
 		Funcionario funcionario = repositorio.findOne(fn.getMid());
 		assertThat(funcionario.getMid(), is(fn.getMid()));
-		assertThat(funcionario.getCarteiraTrabalho(), is(fn.getCarteiraTrabalho()));
+		assertThat(funcionario.getCarteira_trabalho(), is(fn.getCarteira_trabalho()));
 	}
 	
 	@Test
@@ -53,7 +53,7 @@ public class TesteRepositorioFuncionario {
 		
 		Funcionario denovo = repositorio.findOne(id);
 		assertThat(denovo.getMid(), is(id));
-		assertThat(denovo.getCarteiraTrabalho(), is(funcionario.getCarteiraTrabalho()));
+		assertThat(denovo.getCarteira_trabalho(), is(funcionario.getCarteira_trabalho()));
 	}
 	
 	@Test
@@ -64,11 +64,11 @@ public class TesteRepositorioFuncionario {
 		
 		Funcionario funcionario = repositorio.findOne(id);
 		String novoAno = "???";
-		funcionario.setCarteiraTrabalho(novoAno);
+		funcionario.setCarteira_trabalho(novoAno);
 		funcionario = repositorio.save(funcionario);
 		
 		Funcionario denovo = repositorio.findOne(funcionario.getMid());
-		assertThat(denovo.getCarteiraTrabalho(), is(novoAno));
+		assertThat(denovo.getCarteira_trabalho(), is(novoAno));
 		
 	}
 	

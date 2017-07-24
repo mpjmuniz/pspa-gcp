@@ -13,3 +13,17 @@ Tecnologias utilizadas:
 * Spring core
 * Eclipse
 * Microsoft Project
+
+Versão 0.1: 
+. Listagens de alunos, 
+-		  	 funcionários
+-		  	 turmas,
+. controle de estoque para produtos de consumo,
+. 		 							 limpeza e
+									 material didatico
+preparação de cardapio,
+		   de declarações,
+		   de atividades, 
+
+controle de quadro estrutural,
+		 de entrada e saída

@@ -1,14 +1,14 @@
 package org.pspa.gcp.visao;
 
-import java.util.Stack;
-
-import org.pspa.gcp.controle.comandos.Comando;
 import org.pspa.gcp.modelo.Aluno;
 import org.pspa.gcp.modelo.Funcionario;
 import org.pspa.gcp.modelo.Inscrito;
 import org.pspa.gcp.modelo.Turma;
 import org.pspa.gcp.visao.Lista.ListaElementos;
-import org.pspa.gcp.visao.almoxarifado.VisaoAlmoxarifado;
+import org.pspa.gcp.visao.adaptadores.EntradaObjetos;
+import org.pspa.gcp.visao.almoxarifado.VisaoEstoqueConsumo;
+import org.pspa.gcp.visao.almoxarifado.VisaoEstoqueDidatico;
+import org.pspa.gcp.visao.almoxarifado.VisaoEstoqueLimpeza;
 import org.pspa.gcp.visao.cardapio.VisaoCardapio;
 import org.pspa.gcp.visao.declaracoes.VisaoDeclaracoes;
 import org.pspa.gcp.visao.dma.VisaoDistribuicaoMensalAtividades;
@@ -20,12 +20,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
+import javafx.beans.property.ReadOnlyObjectProperty;
 import javafx.beans.property.StringProperty;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -54,18 +54,20 @@ public class Apresentador {
 	/** O apresentador é um singleton, e como tal, aqui está sua instância */
 	private static volatile Apresentador instancia;
 
-	private VisaoAlunos va = null;
+	private VisaoCadastros<Aluno> va = null;
 	private VisaoCadastros<Inscrito> vi = null;
 	private VisaoCadastros<Funcionario> vf = null;
 	private VisaoCadastros<Turma> vt = null;
 	private VisaoCardapio c = null;
-	private VisaoAlmoxarifado a = null;
+	private VisaoEstoqueConsumo vec = null;
+	private VisaoEstoqueLimpeza vel = null;
+	private VisaoEstoqueDidatico ved = null;
 	private VisaoQuadroEstrutural qe = null;
 	private VisaoFinancas f = null;
 	private VisaoDeclaracoes d = null;
 	private VisaoDistribuicaoMensalAtividades dma = null;
+
 	
-	Stack<Comando> pilhaComandos = new Stack<>();
 	
 	/**
 	 * Método de obtenção da instância do apresentador, que só deve existir 1
@@ -97,8 +99,6 @@ public class Apresentador {
 
 		// Definição da cena
 		this.base = new Base();
-
-		
 		
 		// Definição do palco
 		cena = new Scene(base);
@@ -151,8 +151,24 @@ public class Apresentador {
 	public void cadastrarAjuda(StringProperty strp) {
 		base.disponibilizarAjuda().bind(strp);
 	}
-
-	/* Métodos em necessidade de revisão para desacoplamento */
+	
+	/**
+	 * Método para mostrar ajuda no nó dedicado para tal
+	 * 
+	 * @param msg
+	 *            mensagem de ajuda para o usuário
+	 */
+	public void cadastrarAjuda(ReadOnlyObjectProperty<?> strp) {
+		base.disponibilizarAjuda().bind(strp.asString());
+	}
+	
+	/**
+	 * Método para cancelar mostra da ajuda no nó dedicado para tal
+	 * 
+	 */
+	public void descadastrarAjuda() {
+		base.disponibilizarAjuda().unbind();
+	}
 
 	protected void abrirVisaoInscricao() {
 
@@ -205,14 +221,34 @@ public class Apresentador {
 		obterPainel().setCenter(c);
 	}
 	
-	public void abrirVisaoAlmoxarifado() {
-		if (a == null) {
-			a = new VisaoAlmoxarifado(contextoSpring);
+	public void abrirVisaoEstoqueLimpeza() {
+		if (vel == null) {
+			vel = new VisaoEstoqueLimpeza(contextoSpring);
 		} else {
-			a.atualizar();
+			vel.atualizar();
 		}
 
-		obterPainel().setCenter(a);
+		obterPainel().setCenter(vel);
+	}
+
+	public void abrirVisaoEstoqueConsumo() {
+		if (vec == null) {
+			vec = new VisaoEstoqueConsumo(contextoSpring);
+		} else {
+			vec.atualizar();
+		}
+
+		obterPainel().setCenter(vec);
+	}
+	
+	public void abrirVisaoEstoqueDidatico() {
+		if (ved == null) {
+			ved = new VisaoEstoqueDidatico(contextoSpring);
+		} else {
+			ved.atualizar();
+		}
+
+		obterPainel().setCenter(ved);
 	}
 	
 	public void abrirVisaoFinancas() {
@@ -255,23 +291,6 @@ public class Apresentador {
 		obterPainel().setCenter(dma);
 	}
 	
-	public void adicionarComando(Comando cmd){
-		pilhaComandos.push(cmd);
-		
-		base.atualizarDesfazer();
-	}
-	
-	public void desfazer(){
-		Comando cmd = pilhaComandos.pop();
-		
-		cmd.desfazer();
-	}
-	
-	public String obterUltimo(){
-		
-		return pilhaComandos.peek().obterNome();
-	}
-	
 	/**
 	 * Método para se selecionar um elemento de uma lista
 	 * 
@@ -279,21 +298,10 @@ public class Apresentador {
 	 *            campo que guardará nome e referência do elemento
 	 */
 	@SuppressWarnings("unused")
-	public void selecionar(Class<?> cls, TextField tf) {
-		SelecaoFabrica fab = new SelecaoFabrica(tf, cls, SelectionMode.SINGLE, contextoSpring);
-		Selecao<?> selecao = fab.construirSelecao();
-	}
+	public void selecionar(EntradaObjetos<?> eObj) {
 
-	/**
-	 * Método para se selecionar uma sublista de uma lista
-	 * 
-	 * @param lista
-	 *            nó que mostra uma lista, que guardará a lista selecionada
-	 */
-	@SuppressWarnings("unused")
-	public void selecionar(Class<?> cls, ListaElementos<?> lista) {
-		SelecaoFabrica fab = new SelecaoFabrica(lista, cls, SelectionMode.MULTIPLE, contextoSpring);
-		Selecao<?> selecao = fab.construirSelecao();
+		SelecaoFabrica fab = new SelecaoFabrica(eObj, SelectionMode.SINGLE, contextoSpring);
+		Selecao<?> selecao = fab.construirSelecao(eObj.obterValor());
 	}
 	
 	/**
@@ -303,9 +311,10 @@ public class Apresentador {
 	 *            nó que mostra uma lista, que guardará a lista selecionada
 	 */
 	@SuppressWarnings("unused")
-	public void selecionar(Class<?> cls, TableView<?> tabela) {
+	public void selecionar(Class<?> cls, TableView<?> tabela, Object referencia) {
+		
 		SelecaoFabrica fab = new SelecaoFabrica(tabela, cls, SelectionMode.MULTIPLE, contextoSpring);
-		Selecao<?> selecao = fab.construirSelecao();
+		Selecao<?> selecao = fab.construirSelecao(referencia);
 	}
 
 	protected void designarInscricao(Aluno aluno) {

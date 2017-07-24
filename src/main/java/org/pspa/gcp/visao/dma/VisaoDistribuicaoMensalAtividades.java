@@ -6,6 +6,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.Locale.LanguageRange;
@@ -14,31 +15,26 @@ import java.util.ResourceBundle;
 import org.pspa.gcp.modelo.AtividadeDiaria;
 import org.pspa.gcp.modelo.AtividadeSemanal;
 import org.pspa.gcp.modelo.ConteudoDidatico;
-import org.pspa.gcp.modelo.Produto;
 import org.pspa.gcp.visao.Apresentador;
 import org.springframework.context.ApplicationContext;
 
 import javafx.beans.property.SimpleStringProperty;
-import javafx.event.ActionEvent;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContextMenu;
 import javafx.scene.control.DateCell;
 import javafx.scene.control.DatePicker;
-import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TableView.TableViewSelectionModel;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TitledPane;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
@@ -79,6 +75,11 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 	/** campo usado pela biblioteca JavaFX*/
 	@FXML
 	private ResourceBundle resources;
+	
+	/**
+	 * TODO: preparar um fluxo de uso da cena
+	 * 
+	 * */
 	
 	public VisaoDistribuicaoMensalAtividades(ApplicationContext contextoSpring) {
 		apresentador = Apresentador.obterInstancia();
@@ -150,6 +151,7 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 				atualizar();
 			}
 		});
+		
 	}
 
 	private TableColumn<ConteudoDidatico, String> obterColunaAvaliacao() {
@@ -160,11 +162,11 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 		colunaConteudo.setOnEditCommit(e -> {
 			ConteudoDidatico p = e.getRowValue();
 			
-			int indice = aDias.getPanes().indexOf((TitledPane) e.getTableView().getParent());
+			
 			
 			p.setObsAvaliacao(e.getNewValue());
 			
-			servico.salvarConteudo(atual, atual.getDias().get(indice), p);
+			servico.salvarConteudo(p);
 		});
 		
 		return colunaConteudo;
@@ -178,11 +180,11 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 		colunaObjetivos.setOnEditCommit(e -> {
 			ConteudoDidatico p = e.getRowValue();
 			
-			int indice = aDias.getPanes().indexOf((TitledPane) e.getTableView().getParent());
+			
 			
 			p.setObjetivos(e.getNewValue());
 			
-			servico.salvarConteudo(atual, atual.getDias().get(indice), p);
+			servico.salvarConteudo(p);
 		});
 		
 		return colunaObjetivos;
@@ -197,11 +199,11 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 		colunaEtapas.setOnEditCommit(e -> {
 			ConteudoDidatico p = e.getRowValue();
 			
-			int indice = aDias.getPanes().indexOf((TitledPane) e.getTableView().getParent());
+			
 			
 			p.setEtapas(e.getNewValue());
 			
-			servico.salvarConteudo(atual, atual.getDias().get(indice), p);
+			servico.salvarConteudo(p);
 		});
 		
 		return colunaEtapas;
@@ -216,11 +218,11 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 		colunaMaterialUsado.setOnEditCommit(e -> {
 			ConteudoDidatico p = e.getRowValue();
 			
-			int indice = aDias.getPanes().indexOf((TitledPane) e.getTableView().getParent());
+			
 			
 			p.setMaterialUsado(e.getNewValue());
 			
-			servico.salvarConteudo(atual, atual.getDias().get(indice), p);
+			servico.salvarConteudo(p);
 		});
 		
 		return colunaMaterialUsado;
@@ -235,11 +237,9 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 		colunaConteudo.setOnEditCommit(e -> {
 			ConteudoDidatico p = e.getRowValue();
 			
-			int indice = aDias.getPanes().indexOf((TitledPane) e.getTableView().getParent());
-			
 			p.setConteudo(e.getNewValue());
 			
-			servico.salvarConteudo(atual, atual.getDias().get(indice), p);
+			servico.salvarConteudo(p);
 		});
 		
 		return colunaConteudo;
@@ -259,19 +259,13 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 		tfTemaMes.setText(atual.getMes().getTema());
 		taAvaliacao.setText(atual.getAvaliacao());
 		
-		
-		List<String> linguagens;
-		
-		Button adicionar,
-			   remover;
+		List<String> linguagens = new ArrayList<String>();
+		linguagens.add("pt");
 		
 		for(int i = 0; i < atual.getDias().size(); i++){
 			TitledPane tpAtual = aDias.getPanes().get(i);
 			AtividadeDiaria diaAtual = atual.getDias().get(i);
-			
-			linguagens = new ArrayList<String>();
-			linguagens.add("pt");
-			
+		
 			tpAtual.setText(DateTimeFormatter.ofPattern("EEEE dd/MM/yyyy")
 											 .withLocale(Locale.forLanguageTag(Locale.lookupTag(LanguageRange.parse("pt"), linguagens)))
 											 .format(diaAtual.getDia()));
@@ -290,6 +284,8 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 				
 			});
 			
+			conteudo.getItems().addAll(diaAtual.getConteudos());
+			
 			conteudo.setEditable(true);
 			
 			tpAtual.setContent(conteudo);
@@ -299,10 +295,51 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 		dpOutraSemana.setValue(atual.getSegunda());
 	}
 
+	@SuppressWarnings("unchecked")
 	private void remover() {
-		System.out.println("Remover chamado");
+		TitledPane selecionado = aDias.getExpandedPane();
+		
+		if(selecionado == null){
+			
+			ajuda.set("Selecione o dia em que se removerá o conteúdo.");
+			
+			return;
+			
+		} else {
+			
+			ajuda.set("");
+	
+		}
+
+		TableView<ConteudoDidatico> conteudo = (TableView<ConteudoDidatico>) selecionado.getContent();
+		
+		TableViewSelectionModel<ConteudoDidatico> tsm = conteudo.getSelectionModel();
+		
+		if (tsm.isEmpty()) {
+
+			ajuda.set("Selecione os conteudos que serão removidos");
+			
+			return;
+		}
+		
+		// Get all selected row indices in an array
+		ObservableList<Integer> list = tsm.getSelectedIndices();
+		Integer[] selectedIndices = new Integer[list.size()];
+		selectedIndices = list.toArray(selectedIndices);
+
+		// Sort the array
+		Arrays.sort(selectedIndices);
+		
+		// Delete rows (last to first)
+		ConteudoDidatico p;
+		for(int i = selectedIndices.length - 1; i >= 0; i--) {
+			tsm.clearSelection(selectedIndices[i].intValue());
+			 p = conteudo.getItems().remove(selectedIndices[i].intValue());
+			 servico.removerConteudo(atual.getDias().get(aDias.getPanes().indexOf(selecionado)), p);
+		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void adicionar() {
 		TitledPane selecionado = aDias.getExpandedPane();
 		

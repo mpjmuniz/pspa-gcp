@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import org.pspa.gcp.modelo.enums.Instrucao;
@@ -13,7 +14,11 @@ import org.pspa.gcp.modelo.enums.Sexo;
 import org.pspa.gcp.modelo.enums.UF;
 
 @Entity
-public class Aluno{
+/** @author Marcelo Muniz
+ * 
+ * Versão 0.1: pronto para entrega
+ * */
+public class Aluno implements Participante{
 
 	// Sobre o aluno
 	
@@ -70,6 +75,7 @@ public class Aluno{
 	private String responsável_pelo_preenchimento;
 
 	@ManyToOne
+	@JoinColumn(name = "turma_id")
 	private Turma turma;
 
 	public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC, String bF, String designação,

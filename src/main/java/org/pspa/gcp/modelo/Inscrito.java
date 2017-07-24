@@ -12,6 +12,12 @@ import org.pspa.gcp.modelo.enums.CondicaoLocal;
 import org.pspa.gcp.modelo.enums.MaterialMoradia;
 import org.pspa.gcp.modelo.enums.Sexo;
 
+
+/**
+ * @author Marcelo Pablo 
+ * 
+ * @version 0.1
+ * */
 @Entity
 public class Inscrito{
 

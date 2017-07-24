@@ -2,7 +2,6 @@ package org.pspa.gcp.visao;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.EmptyStackException;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.StringProperty;
@@ -36,10 +35,10 @@ public class Base extends BorderPane {
 
 	/** menus expansíveis*/
 	@FXML
-	private Menu mBase, mInscricao, mEditar;
-
+	private Menu mBase, mInscricao;
+	
 	@FXML
-	private MenuItem mAluno, mFuncionario, mTurma, mInsAluno, mDesfazer, mCardapio, mAlmoxarifado, 
+	private MenuItem mAluno, mFuncionario, mTurma, mInsAluno, mCardapio, mEstoqueLimpeza, mEstoqueConsumo, mEstoqueDidatico, 
 					 mQuadro, mFinancas, mDeclaracoes, mDistribuicao;
 
 	/** barra de menus para seleção das telas*/
@@ -88,31 +87,15 @@ public class Base extends BorderPane {
 		mInsAluno.setOnAction(e -> apresentador.abrirVisaoInscricao());
 		mTurma.setOnAction(e -> apresentador.abrirVisaoTurmas());
 		mCardapio.setOnAction(e -> apresentador.abrirVisaoCardapio());
-		mAlmoxarifado.setOnAction(e -> apresentador.abrirVisaoAlmoxarifado());
+		mEstoqueLimpeza.setOnAction(e -> apresentador.abrirVisaoEstoqueLimpeza());
+		mEstoqueConsumo.setOnAction(e -> apresentador.abrirVisaoEstoqueConsumo());
+		mEstoqueDidatico.setOnAction(e -> apresentador.abrirVisaoEstoqueDidatico());
 		mQuadro.setOnAction(e -> apresentador.abrirVisaoQuadro());
 		mFinancas.setOnAction(e -> apresentador.abrirVisaoFinancas());
 		mDeclaracoes.setOnAction(e -> apresentador.abrirVisaoDeclaracoes());
 		mDistribuicao.setOnAction(e -> apresentador.abrirVisaoDistribuicaoMensalAtividades());
-		mDesfazer.setOnAction(e -> desfazer());
-		mDesfazer.setDisable(true);
 	}
 	
-	protected void atualizarDesfazer(){
-		if(mDesfazer.isDisable()) mDesfazer.setDisable(false);
-		
-		try {
-			mDesfazer.setText("Desfazer " + apresentador.obterUltimo());
-		} catch(EmptyStackException e){
-			mDesfazer.setDisable(true);
-		}
-	}
-	
-	private void desfazer() {
-		apresentador.desfazer();
-		
-		atualizarDesfazer();
-	}
-
 	/** método de obtenção do nó que mostrará a ajuda para o usuário
 	 *  @return rótulo de ajuda
 	 * */

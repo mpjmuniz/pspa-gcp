@@ -12,6 +12,8 @@ public class VisaoFuncionarios extends VisaoCadastros<Funcionario>{
 		super(Funcionario.class);
 		
 		repositorio = contexto.getBean(RepositorioFuncionario.class);
+		
+		popularVisaoInicialmente();
 	}
 	
 	@Override

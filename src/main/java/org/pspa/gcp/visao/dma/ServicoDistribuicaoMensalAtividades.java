@@ -15,6 +15,11 @@ import org.pspa.gcp.modelo.repositorios.RepositorioConteudoDidatico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+/*
+ * TODO: refazer lógica de organização das atividades mensais, diárias e semanais
+ * 
+ * */
+
 @Service
 public class ServicoDistribuicaoMensalAtividades {
 	
@@ -104,6 +109,10 @@ public class ServicoDistribuicaoMensalAtividades {
 		repositorioAS.save(atual);
 	}
 	
+	public void salvarConteudo(ConteudoDidatico cd){
+		repositorioCD.save(cd);
+	}
+	
 	public LocalDate obterSegunda(LocalDate data){
 		
 		LocalDate dataAtual = data;
@@ -124,6 +133,14 @@ public class ServicoDistribuicaoMensalAtividades {
 	public AtividadeSemanal obterAtividadeSemanal(LocalDate segunda){
 		
 		return repositorioAS.findOne(segunda);
+		
+	}
+
+	public void removerConteudo(AtividadeDiaria atividadeDiaria, ConteudoDidatico p) {
+		
+		atividadeDiaria.getConteudos().remove(p);
+		repositorioAD.save(atividadeDiaria);
+		repositorioCD.delete(p);
 		
 	}
 }

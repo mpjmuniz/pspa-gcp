@@ -41,8 +41,12 @@ public abstract class SelecaoMultipla<T> extends Selecao<T> {
 		List<T> itens = lvCadastros.getSelectionModel().getSelectedItems();
 		
 		if(listaAuxiliar != null){
-			listaAuxiliar.getItems().clear();
-			listaAuxiliar.getItems().addAll(itens);
+			if(itens.size() > 0){
+				listaAuxiliar.getItems().clear();
+				listaAuxiliar.getItems().addAll(itens);
+			} else {
+				
+			}
 		} else{
 			throw new RuntimeException("Lista auxiliar não declarada");
 		}

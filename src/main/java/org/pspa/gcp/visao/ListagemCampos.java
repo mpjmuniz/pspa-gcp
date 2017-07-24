@@ -9,10 +9,21 @@ import java.time.LocalDate;
 import java.util.List;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 
+import org.pspa.gcp.modelo.Participante;
 import org.pspa.gcp.modelo.enums.Enumeracao;
-import org.pspa.gcp.visao.adaptadores.*;
-import org.pspa.gcp.visao.util.*;
+import org.pspa.gcp.visao.adaptadores.Adaptador;
+import org.pspa.gcp.visao.adaptadores.EntradaBooleanos;
+import org.pspa.gcp.visao.adaptadores.EntradaDatas;
+import org.pspa.gcp.visao.adaptadores.EntradaEnums;
+import org.pspa.gcp.visao.adaptadores.EntradaInteiros;
+import org.pspa.gcp.visao.adaptadores.EntradaListas;
+import org.pspa.gcp.visao.adaptadores.EntradaObjetos;
+import org.pspa.gcp.visao.adaptadores.EntradaTexto;
+import org.pspa.gcp.visao.adaptadores.Identificador;
+import org.pspa.gcp.visao.util.ReflectUtils;
+import org.pspa.gcp.visao.util.StringUtils;
 
 import javafx.scene.Node;
 import javafx.scene.layout.GridPane;
@@ -119,11 +130,12 @@ public class ListagemCampos<T> extends GridPane {
 
 		for (int i = 0; i < campos.length; i++) {
 			
-			this.addRow(i, 
+			if(!campos[i].isAnnotationPresent(GeneratedValue.class)){
+				this.addRow(i, 
 						new Identificador(identificarNome(campos[i].getName())), 
 						identificarCampo(campos[i])
 						);
-			
+			}
 		}
 	}
 
@@ -173,7 +185,7 @@ public class ListagemCampos<T> extends GridPane {
 				throw new RuntimeException(
 						"problema com o campo: " 
 						+ campo.getName() 
-						+ ", do tipo :" 
+						+ ", do tipo : " 
 						+ campo.getType().getSimpleName());
 			}
 			
@@ -215,13 +227,17 @@ public class ListagemCampos<T> extends GridPane {
 				Adaptador<String> rotulo;
 				Adaptador<?> campo;
 
-				for (int i = 0; i < ReflectUtils.getInstanceVariables(cls).length; i++) {
+				// 1 para pular o MID
+				for (int i = 1; i < ReflectUtils.getInstanceVariables(cls).length; i++) {
+					
 					rotulo = (Adaptador<String>) obterNoPelaPosicao(i, 0);
 					campo = obterNoPelaPosicao(i, 1);
 
+					// Pensar como implantar input de listas
+					
 					nome = rotulo.obterValor();
 					nome = StringUtils.reverterNome(nome);
-
+					
 					setter = cls.getMethod("set" + nome, campo.obterTipo());
 					setter.invoke(objeto, campo.obterValor());
 
@@ -253,13 +269,17 @@ public class ListagemCampos<T> extends GridPane {
 			Adaptador<String> rotulo;
 			Object valor;
 
-			for (int i = 0; i < ReflectUtils.getInstanceVariables(classe).length; i++) {
+			for (int i = 1; i < ReflectUtils.getInstanceVariables(classe).length; i++) {
 				rotulo = (Adaptador<String>) obterNoPelaPosicao(i, 0);
 				campo = (Adaptador<Object>) obterNoPelaPosicao(i, 1);
 
 				nome = rotulo.obterValor();
 				nome = StringUtils.reverterNome(nome);
 
+				if(campo instanceof EntradaObjetos<?>){
+					((EntradaObjetos<?>) campo).setPartc((Participante) objeto);
+				}
+				
 				getter = this.classe.getMethod("get" + nome);
 				valor = getter.invoke(objeto);
 				campo.definirValor(valor);
@@ -281,7 +301,7 @@ public class ListagemCampos<T> extends GridPane {
 
 		Adaptador<?> no = null;
 		
-		for (int i = 0; i < ReflectUtils.getInstanceVariables(classe).length; i++) {
+		for (int i = 1; i < ReflectUtils.getInstanceVariables(classe).length; i++) {
 			try {
 				no = obterNoPelaPosicao(i, 1);
 				
@@ -304,7 +324,7 @@ public class ListagemCampos<T> extends GridPane {
 
 		Adaptador<?> no = null;
 		
-		for (int i = 0; i < ReflectUtils.getInstanceVariables(classe).length; i++) {
+		for (int i = 1; i < ReflectUtils.getInstanceVariables(classe).length; i++) {
 			
 			no = obterNoPelaPosicao(i, 1);
 			

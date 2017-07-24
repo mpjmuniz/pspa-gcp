@@ -9,6 +9,9 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+/**
+ * versão 0.1: pronto para entrega
+ * */
 @Entity
 public class AtividadeDiaria {
 	
@@ -27,8 +30,6 @@ public class AtividadeDiaria {
 		this.dia = dia;
 		this.conteudos = conteudos;
 	}
-
-	
 	
 	public LocalDate getDia() {
 		return dia;

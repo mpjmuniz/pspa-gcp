@@ -17,7 +17,7 @@ import javafx.stage.Stage;
  * 
  * @author marcelo
  * 
- * @version 0.1
+ * @version 0.1: pronto para entrega
  * */
 @SpringBootApplication
 public class Principal extends Application{

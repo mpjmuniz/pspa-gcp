@@ -5,6 +5,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/**
+ * @author Marcelo Pablo
+ * 
+ * @version 0.1
+ * */
 @Entity
 public class Declaracao {
 	

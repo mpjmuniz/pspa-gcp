@@ -11,6 +11,10 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+/**
+ * @author Marcelo Pablo
+ * @version 0.1: pronto para entrega
+ * */
 @Entity
 public class AtividadeSemanal {
 	 

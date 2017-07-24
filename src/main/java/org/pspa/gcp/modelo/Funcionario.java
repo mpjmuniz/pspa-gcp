@@ -1,19 +1,24 @@
 package org.pspa.gcp.modelo;
 import java.time.LocalDate;
-import java.util.List;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.pspa.gcp.modelo.enums.Funcao;
+import org.pspa.gcp.modelo.enums.Instrucao;
 import org.pspa.gcp.modelo.enums.Sexo;
 
+/**
+ * @version 0.1
+ * 
+ * @author Marcelo Pablo
+ * */
 @Entity
-public class Funcionario{
+public class Funcionario implements Participante{
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -23,47 +28,47 @@ public class Funcionario{
 	
 	protected Sexo sexo;
 
-	private LocalDate dataIngresso;
-	private String rg,
-			cpf,
+	private LocalDate data_Ingresso,
+					  data_Nascimento;
+	
+	private String RG,
+			CPF,
 			titulo,
-			carteiraTrabalho,
+			carteira_Trabalho,
 			endereco,
 			telefone;
 	
 	private Funcao funcao;
 	
-	@ManyToMany(fetch = FetchType.LAZY, targetEntity = Turma.class)
-	private List<Turma> turmas;
+	private Instrucao formacao;
+	
+	@ManyToOne
+	@JoinColumn(name = "turma_id")
+	private Turma turma;
 		
 	public Funcionario(String nome, Funcao funcao, Sexo sexo, 
-			LocalDate dataIngresso, 
-			String rg, String cpf, String titulo, 
-			String carteiraTrabalho, String endereco, String telefone) {
+			LocalDate dataIngresso, LocalDate dataNascimento,
+			String rg, String cpf, String titulo, Instrucao formacao,
+			String carteiraTrabalho, String endereco, String telefone, Turma turma) {
 		
 		this.nome = nome;
 		this.funcao = funcao;
 		this.sexo = sexo;
-		this.dataIngresso = dataIngresso;
-		this.rg = rg;
-		this.cpf = cpf;
+		this.data_Ingresso = dataIngresso;
+		this.data_Nascimento = dataNascimento;
+		this.RG = rg;
+		this.formacao = formacao;
+		this.CPF = cpf;
 		this.titulo = titulo;
-		this.carteiraTrabalho = carteiraTrabalho;
+		this.carteira_Trabalho = carteiraTrabalho;
 		this.endereco = endereco;
 		this.telefone = telefone;
+		this.turma = turma;
 	}
 	
 	public Funcionario() {
 		
-		this.nome ="";
-		this.sexo = null;
-		this.dataIngresso = null;
-		this.rg = "";
-		this.cpf = "";
-		this.titulo = "";
-		this.carteiraTrabalho = "";
-		this.endereco = "";
-		this.telefone = "";
+		this("", null, null, null, null, "", "", "", null, "", "", "", new Turma());
 	}
 
 	public Sexo getSexo() {
@@ -74,18 +79,18 @@ public class Funcionario{
 		this.sexo = sexo;
 	}
 	
-	public LocalDate getDataIngresso() {
-		return dataIngresso;
+	public LocalDate getData_ingresso() {
+		return data_Ingresso;
 	}
 
 
-	public String getRg() {
-		return rg;
+	public String getRG() {
+		return RG;
 	}
 
 
-	public String getCpf() {
-		return cpf;
+	public String getCPF() {
+		return CPF;
 	}
 
 
@@ -94,8 +99,8 @@ public class Funcionario{
 	}
 
 
-	public String getCarteiraTrabalho() {
-		return carteiraTrabalho;
+	public String getCarteira_trabalho() {
+		return carteira_Trabalho;
 	}
 
 
@@ -110,24 +115,24 @@ public class Funcionario{
 
 	
 	
-	public void setDataIngresso(LocalDate dataIngresso) {
-		this.dataIngresso = dataIngresso;
+	public void setData_ingresso(LocalDate dataIngresso) {
+		this.data_Ingresso = dataIngresso;
 	}
 
-	public void setRg(String rg) {
-		this.rg = rg;
+	public void setRG(String rg) {
+		this.RG = rg;
 	}
 
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
+	public void setCPF(String cpf) {
+		this.CPF = cpf;
 	}
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
 	}
 
-	public void setCarteiraTrabalho(String carteiraTrabalho) {
-		this.carteiraTrabalho = carteiraTrabalho;
+	public void setCarteira_trabalho(String carteiraTrabalho) {
+		this.carteira_Trabalho = carteiraTrabalho;
 	}
 
 	public void setEndereco(String endereco) {
@@ -143,12 +148,13 @@ public class Funcionario{
 		return this.nome;
 	}
 
-	public List<Turma> getTurmas() {
-		return turmas;
+	
+	public Turma getTurma() {
+		return turma;
 	}
 
-	public void setTurmas(List<Turma> turmas) {
-		this.turmas = turmas;
+	public void setTurma(Turma turma) {
+		this.turma = turma;
 	}
 	
 	public Integer getMid(){
@@ -173,5 +179,21 @@ public class Funcionario{
 
 	public void setFuncao(Funcao funcao) {
 		this.funcao = funcao;
+	}
+
+	public LocalDate getData_nascimento() {
+		return data_Nascimento;
+	}
+
+	public void setData_nascimento(LocalDate dataNascimento) {
+		this.data_Nascimento = dataNascimento;
+	}
+
+	public Instrucao getFormacao() {
+		return formacao;
+	}
+
+	public void setFormacao(Instrucao formacao) {
+		this.formacao = formacao;
 	}
 }

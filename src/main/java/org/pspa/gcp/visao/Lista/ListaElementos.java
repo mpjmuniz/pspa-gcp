@@ -24,6 +24,9 @@ public abstract class ListaElementos<T> extends ListView<T> {
 		this.setPrefSize(70, 120);
 		this.setEditable(false);
 		this.setCellFactory(new FabricaCelulas<T>());
+		
 	}
+
+	
 	
 }

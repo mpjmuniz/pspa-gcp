@@ -10,7 +10,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.pspa.gcp.modelo.enums.Funcao;
 import org.pspa.gcp.modelo.enums.Grupamento;
@@ -18,33 +17,35 @@ import org.pspa.gcp.modelo.enums.Grupamento;
 @Entity
 public class Turma {
 
+	/** TODO: tirar atributo nome e ver no que dá*/
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer mid;
-	
-	private String nome;
+	private Integer id;
 
+	private String nome;
+	
 	private Grupamento grupamento;
 	
-	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Aluno> alunos;
 	
-	@OneToOne(targetEntity = Funcionario.class, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Funcionario> funcionarios;
 
-	public Turma(String nome) {
-		this(null, nome, new ArrayList<Funcionario>(),
+	public Turma(Grupamento grup) {
+		this(grup, new ArrayList<Funcionario>(),
 				new ArrayList<Aluno>());
 	}
 	
 	public Turma() {
-		this(null, "", new ArrayList<Funcionario>(),
+		this(null, new ArrayList<Funcionario>(),
 				new ArrayList<Aluno>());
 	}
 
-	public Turma(Grupamento grupamento, String nome, List<Funcionario> funcionarios, List<Aluno> alunos) {
+	public Turma(Grupamento grupamento, List<Funcionario> funcionarios, List<Aluno> alunos) {
+		this.setNome((grupamento != null ) ?  grupamento.toString() : "[Nova]");
 		this.grupamento = grupamento;
-		this.nome = nome;
 		this.funcionarios = funcionarios;
 		this.alunos = alunos;
 	}
@@ -53,8 +54,9 @@ public class Turma {
 		return alunos;
 	}
 
-	public void setAlunos(List<Aluno> alunos) {
-		this.alunos = alunos;
+	@SuppressWarnings("unchecked")
+	public void setAlunos(List<?> alunos) {
+		this.alunos = (List<Aluno>) alunos;
 	}
 
 	public void adicionarAuxiliares(List<Funcionario> auxiliares) {
@@ -70,7 +72,7 @@ public class Turma {
 	}
 
 	public List<Funcionario> getAuxiliares(){
-		List<Funcionario> auxiliares = new ArrayList<>();
+		List<Funcionario> auxiliares = new ArrayList<Funcionario>();
 		
 		for(Funcionario f : funcionarios){
 			if(f.getFuncao() == Funcao.Auxiliar){
@@ -86,9 +88,13 @@ public class Turma {
 		return this.funcionarios;
 	}
 	
+	/*@SuppressWarnings("unchecked")
+	public void setFuncionarios(List<?> fs){
+		this.funcionarios = (List<Funcionario>) fs;
+	}*/
+	
 	public void setFuncionarios(List<Funcionario> fs){
-		
-		this.funcionarios = fs;
+		this.funcionarios = (List<Funcionario>) fs;
 	}
 	
 	public Funcionario getProfessor() {
@@ -121,23 +127,23 @@ public class Turma {
 	}
 
 	public Integer getMid(){
-		return this.mid;
+		return this.id;
 	}
 	
 	public void setMid(Integer id){
-		this.mid = id;
-	}
-	
-	public String getNome() {
-		return nome;
-	}
-	
-	public void setNome(String nome) {
-		this.nome = nome;
+		this.id = id;
 	}
 	
 	@Override
 	public String toString(){
-		return this.nome;
+		return nome;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
 	}
 }

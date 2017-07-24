@@ -2,9 +2,6 @@ package org.pspa.gcp.visao;
 
 import java.lang.reflect.InvocationTargetException;
 
-import org.pspa.gcp.controle.comandos.Alteracao;
-import org.pspa.gcp.controle.comandos.Insercao;
-import org.pspa.gcp.controle.comandos.Remocao;
 import org.pspa.gcp.visao.Lista.ListaElementos;
 import org.pspa.gcp.visao.Lista.ListaSelecaoUnica;
 import org.springframework.stereotype.Component;
@@ -78,7 +75,7 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 
 		this.lElementos = new ListaSelecaoUnica<T>();
 		lElementos.getSelectionModel().selectedItemProperty().addListener(this::mudancaNaSelecao);
-		
+		lElementos.setOnMouseClicked(e -> atualizar());
 		// Botões de controle
 		bNovo = new Button("Criar Novo");
 		bNovo.setOnAction(e -> preparar());
@@ -122,6 +119,8 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 		
 		lElementos.getSelectionModel().select(0);
 		salvo();
+		
+		
 	}
 	
 	
@@ -177,14 +176,9 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 			lCampos.construirObjeto();
 
 			T objeto = lCampos.obterObjeto();
-
-			Insercao<T> cmd = new Insercao<>(this, objeto);
 			
-			cmd.executar();
-			
-			apresentador.adicionarComando(cmd);
+			cadastrar(objeto);
 						
-			
 		} else {
 
 			ajuda.set("Problema no cadastro: Alguns dos dados estão inválidos");
@@ -193,7 +187,6 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 	
 	public void cadastrar(T objeto){
 		this.persistir(objeto);
-		this.lElementos.getItems().add(objeto);
 		lElementos.refresh();
 		lCampos.definirObjeto(null);
 		salvo();
@@ -208,11 +201,8 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 			return;
 		}
 
-		Remocao<T> remocao = new Remocao<>(this, lElementos.getSelectionModel().getSelectedItem());
+		remover(lElementos.getSelectionModel().getSelectedItem());
 		
-		remocao.executar();
-		
-		apresentador.adicionarComando(remocao);
 	}
 	
 	public void remover(T objeto){
@@ -239,18 +229,14 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 		
 		objeto = lCampos.obterObjeto();
 		
-		Alteracao<T> cmd = new Alteracao<T>(this, alterado, objeto);
-		
-		cmd.executar();
-		
-		apresentador.adicionarComando(cmd);
-		
+		alterar(alterado, objeto);
 	}
 	
 	public void alterar(T anterior, T posterior){
 		
 		lElementos.getItems().set(lElementos.getItems().indexOf(anterior),	posterior);
 		
+		this.remover(anterior);
 		this.persistir(posterior);
 		
 		lElementos.refresh();
@@ -420,6 +406,7 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 
 
 	public void atualizar() {
-		return;
+		T elemento = this.lElementos.getSelectionModel().getSelectedItem();
+		this.lCampos.definirObjeto(elemento);
 	}	
 }

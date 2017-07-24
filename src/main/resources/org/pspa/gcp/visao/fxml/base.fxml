@@ -41,7 +41,7 @@
 						</MenuItem>
 					</items>
 				</Menu>
-				<Menu fx:id="mRefeicao" mnemonicParsing="false" text="Alimentos">
+				<Menu fx:id="mRefeicao" mnemonicParsing="false" text="Estoques">
 					<items>
 						<MenuItem fx:id="mCardapio" mnemonicParsing="false" text="Cardápio">
 							<accelerator>
@@ -49,11 +49,15 @@
 									control="UP" meta="UP" shift="UP" shortcut="UP" />
 							</accelerator>
 						</MenuItem>
-						<MenuItem fx:id="mAlmoxarifado" mnemonicParsing="false" text="Almoxarifado">
+						<MenuItem fx:id="mEstoqueLimpeza" mnemonicParsing="false" text="Limpeza">
 							<accelerator>
-								<KeyCodeCombination alt="DOWN" code="X"
+								<KeyCodeCombination alt="DOWN" code="L"
 									control="UP" meta="UP" shift="UP" shortcut="UP" />
 							</accelerator>
+						</MenuItem>
+						<MenuItem fx:id="mEstoqueConsumo" mnemonicParsing="false" text="Consumo">
+						</MenuItem>
+						<MenuItem fx:id="mEstoqueDidatico" mnemonicParsing="false" text="Material Didático">
 						</MenuItem>
 					</items>
 				</Menu>
@@ -63,16 +67,6 @@
 							<accelerator>
 								<KeyCodeCombination alt="DOWN" code="I"
 									control="UP" meta="UP" shift="UP" shortcut="UP" />
-							</accelerator>
-						</MenuItem>
-					</items>
-				</Menu>
-				<Menu fx:id="mEditar" mnemonicParsing="false" text="Editar">
-					<items>
-						<MenuItem fx:id="mDesfazer" mnemonicParsing="false" text="Desfazer ">
-							<accelerator>
-								<KeyCodeCombination alt="UP" code="Z"
-									control="DOWN" meta="UP" shift="UP" shortcut="UP" />
 							</accelerator>
 						</MenuItem>
 					</items>

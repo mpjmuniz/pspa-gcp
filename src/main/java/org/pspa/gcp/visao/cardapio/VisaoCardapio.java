@@ -1,6 +1,5 @@
 package org.pspa.gcp.visao.cardapio;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 
 import org.pspa.gcp.modelo.Cardapio;
@@ -8,6 +7,8 @@ import org.pspa.gcp.modelo.Produto;
 import org.pspa.gcp.modelo.enums.Semana;
 import org.pspa.gcp.visao.Apresentador;
 import org.pspa.gcp.visao.adaptadores.EntradaInteiros;
+import org.pspa.gcp.visao.almoxarifado.ServicoEstoque;
+import org.pspa.gcp.visao.util.Conversor;
 import org.springframework.context.ApplicationContext;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
@@ -17,7 +18,6 @@ import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.print.PrinterJob;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -32,6 +32,7 @@ import javafx.scene.layout.VBox;
 public class VisaoCardapio extends VBox {
 	
 	ServicoCardapio servico;
+	ServicoEstoque servicoAux;
 	
 	private Cardapio atual;
 	
@@ -43,8 +44,6 @@ public class VisaoCardapio extends VBox {
 						 imprimir;
 	
 	private final TextArea taObs;
-	
-	private ChoiceBox<Cardapio> cardapios;
 	
 	private SimpleStringProperty ajuda;
 	
@@ -60,19 +59,16 @@ public class VisaoCardapio extends VBox {
 	public VisaoCardapio(ApplicationContext contexto) {
 		
 		servico = contexto.getBean(ServicoCardapio.class);
+		servicoAux = contexto.getBean(ServicoEstoque.class);
 		
-		cardapios = new ChoiceBox<>();
-		cardapios.getItems().addAll(servico.obterCardapios());
-		cardapios.setOnAction(e -> {
-			atual = cardapios.getValue();
-			atualizarVisao();
-		});
+		atual = servico.obterUltimoCardapio();
 		
 		apresentador = Apresentador.obterInstancia();
 		
 		this.tabela = new TableView<Produto>();
 		
 		tabela.getColumns().addAll(obterColunaNome(),
+								 obterColinaMedida(),
 								 obterColunaSegunda(),
 								 obterColunaTerca(),
 								 obterColunaQuarta(),
@@ -82,15 +78,14 @@ public class VisaoCardapio extends VBox {
 
 		tabela.getColumns().forEach(e -> {
 			e.setPrefWidth((apresentador.obterPalco().getWidth() / tabela.getColumns().size()) - 1);
-			
 		});
 		
 		tabela.setEditable(true);
 		
+		tabela.setPrefHeight(tabela.getMaxHeight());
+		
 		ajuda = new SimpleStringProperty("");
 		apresentador.cadastrarAjuda(ajuda);
-		
-		this.setSpacing(10);
 		
 		adicionar = new Button("Adicionar");
 		adicionar.setOnAction(e -> adicionar());
@@ -103,9 +98,7 @@ public class VisaoCardapio extends VBox {
 		
 		imprimir = new Button("Imprimir");
 		imprimir.setOnAction(e -> imprimir());
-		
-		tabela.setPrefHeight(tabela.getMaxHeight());
-		
+				
 		HBox hbNumCriancas = new HBox(10),
 			 hbNumFuncionarios = new HBox(10);
 		
@@ -116,16 +109,12 @@ public class VisaoCardapio extends VBox {
 		
 		eiNumFuncionarios = new EntradaInteiros();
 		
-		hbNumCriancas.getChildren().addAll(lNumCriancas, eiNumCriancas, cardapios);
+		hbNumCriancas.getChildren().addAll(lNumCriancas, eiNumCriancas);
 		hbNumFuncionarios.getChildren().addAll(lNumFuncionarios, eiNumFuncionarios);
 		
 		taObs = new TextArea();
 		
-		cardapios.getSelectionModel().select(servico.obterCardapio());
-		
-		// TODO: implementar atualização do cardapio em cima do uso de recursos
-		
-		atual.setUltimaExecucao(LocalDate.now());
+		atualizarVisao();
 		
 		HBox subBase = new HBox(10);
 		subBase.getChildren().addAll(salvar, adicionar, remover, imprimir);
@@ -136,6 +125,8 @@ public class VisaoCardapio extends VBox {
 		
 	}
 	
+	
+
 	// TODO: testar num ambiente apropriado
 	private void imprimir() {
 		PrinterJob job = PrinterJob.createPrinterJob();
@@ -159,18 +150,18 @@ public class VisaoCardapio extends VBox {
 		atual.setObservacao(taObs.getText());
 		atual.setNumeroAlunos(eiNumCriancas.obterValor());
 		atual.setNumeroFuncionarios(eiNumFuncionarios.obterValor());
+	
+		for(Produto p : tabela.getItems()){
+			
+			servico.adicionarProduto(atual, p);
+		}	
+		
+		
 		
 		servico.salvarCardapio(atual);
 	}
 
 	private void atualizarVisao() {
-		if(atual.getMes() != LocalDate.now().getMonth()){
-			adicionar.setDisable(true);
-			remover.setDisable(true);
-		} else {
-			adicionar.setDisable(false);
-			remover.setDisable(false);
-		}
 		
 		Integer num = atual.getNumeroAlunos();
 		if(num == null){
@@ -221,7 +212,6 @@ public class VisaoCardapio extends VBox {
 	}
 
 	private void adicionar() {
-		
 		apresentador.selecionar(Produto.class, tabela);
 	}
 
@@ -239,34 +229,44 @@ public class VisaoCardapio extends VBox {
 		return colunaNome;
 	}
 	
-	private TableColumn<Produto, String> obterColunaSexta() {
-		TableColumn<Produto, String> colunaSexta = new TableColumn<>("Sexta");
+	private TableColumn<Produto, String> obterColinaMedida() {
+		TableColumn<Produto, String> colunaMedida = new TableColumn<>("Medida");
+		colunaMedida.setCellValueFactory(new PropertyValueFactory<>("medida"));
+		colunaMedida.setEditable(false);
+		
+		return colunaMedida;
+	}
+	
+	private TableColumn<Produto, Integer> obterColunaSexta() {
+		TableColumn<Produto, Integer> colunaSexta = new TableColumn<>("Sexta");
 		colunaSexta.setCellValueFactory(new PropertyValueFactory<>("sexta"));
-		colunaSexta.setCellFactory(TextFieldTableCell.<Produto>forTableColumn());
+		colunaSexta.setCellFactory(TextFieldTableCell.<Produto, Integer>forTableColumn(new Conversor()));
 		colunaSexta.setOnEditCommit(e -> {
 			Produto p = e.getRowValue();
 			p.setSexta(e.getNewValue());
+			
 			servico.salvarProduto(p);
 		});
 		return colunaSexta;
 	}
 	
-	private TableColumn<Produto, String> obterColunaQuinta() {
-		TableColumn<Produto, String> colunaQuinta = new TableColumn<>("Quinta");
+	private TableColumn<Produto, Integer> obterColunaQuinta() {
+		TableColumn<Produto, Integer> colunaQuinta = new TableColumn<>("Quinta");
 		colunaQuinta.setCellValueFactory(new PropertyValueFactory<>("quinta"));
-		colunaQuinta.setCellFactory(TextFieldTableCell.<Produto>forTableColumn());
+		colunaQuinta.setCellFactory(TextFieldTableCell.<Produto, Integer>forTableColumn(new Conversor()));
 		colunaQuinta.setOnEditCommit(e -> {
 			Produto p = e.getRowValue();
 			p.setQuinta(e.getNewValue());
+			
 			servico.salvarProduto(p);
 		});
 		return colunaQuinta;
 	}
 	
-	private TableColumn<Produto, String> obterColunaQuarta() {
-		TableColumn<Produto, String> colunaQuarta = new TableColumn<>("Quarta");
+	private TableColumn<Produto, Integer> obterColunaQuarta() {
+		TableColumn<Produto, Integer> colunaQuarta = new TableColumn<>("Quarta");
 		colunaQuarta.setCellValueFactory(new PropertyValueFactory<>("quarta"));
-		colunaQuarta.setCellFactory(TextFieldTableCell.<Produto>forTableColumn());
+		colunaQuarta.setCellFactory(TextFieldTableCell.<Produto, Integer>forTableColumn(new Conversor()));
 		colunaQuarta.setOnEditCommit(e -> {
 			Produto p = e.getRowValue();
 			p.setQuarta(e.getNewValue());
@@ -275,25 +275,27 @@ public class VisaoCardapio extends VBox {
 		return colunaQuarta;
 	}
 	
-	private TableColumn<Produto, String> obterColunaTerca() {
-		TableColumn<Produto, String> colunaTerca = new TableColumn<>("Terca");
+	private TableColumn<Produto, Integer> obterColunaTerca() {
+		TableColumn<Produto, Integer> colunaTerca = new TableColumn<>("Terca");
 		colunaTerca.setCellValueFactory(new PropertyValueFactory<>("terca"));
-		colunaTerca.setCellFactory(TextFieldTableCell.<Produto>forTableColumn());
+		colunaTerca.setCellFactory(TextFieldTableCell.<Produto, Integer>forTableColumn(new Conversor()));
 		colunaTerca.setOnEditCommit(e -> {
 			Produto p = e.getRowValue();
 			p.setTerca(e.getNewValue());
+			
 			servico.salvarProduto(p);
 		});
 		return colunaTerca;
 	}
 	
-	private TableColumn<Produto, String> obterColunaSegunda() {
-		TableColumn<Produto, String> colunaSegunda = new TableColumn<>("Segunda");
+	private TableColumn<Produto, Integer> obterColunaSegunda() {
+		TableColumn<Produto, Integer> colunaSegunda = new TableColumn<>("Segunda");
 		colunaSegunda.setCellValueFactory(new PropertyValueFactory<>("segunda"));
-		colunaSegunda.setCellFactory(TextFieldTableCell.<Produto>forTableColumn());
+		colunaSegunda.setCellFactory(TextFieldTableCell.<Produto, Integer>forTableColumn(new Conversor()));
 		colunaSegunda.setOnEditCommit(e -> {
 			Produto p = e.getRowValue();
 			p.setSegunda(e.getNewValue());
+			
 			servico.salvarProduto(p);
 		});
 		return colunaSegunda;

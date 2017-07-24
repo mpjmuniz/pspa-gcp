@@ -7,7 +7,8 @@ public enum Instrucao implements Enumeracao{
 	Médio_Completo,
 	Superior_Incompleto,
 	Superior_Completo,
-	Técnico;
+	Técnico,
+	Magistério;
 	
 	public String toString(){
 		return this.name().replace('_', ' ');

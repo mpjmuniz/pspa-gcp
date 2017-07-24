@@ -3,6 +3,7 @@ package org.pspa.gcp.visao.selecao;
 import java.util.List;
 
 import org.pspa.gcp.modelo.Produto;
+import org.pspa.gcp.modelo.enums.Tipo;
 import org.pspa.gcp.modelo.repositorios.RepositorioProduto;
 import org.springframework.context.ApplicationContext;
 
@@ -36,7 +37,13 @@ public class SelecaoTabelaProdutos extends Selecao<Produto> {
 
 	@Override
 	protected void popularVisao() {
-		this.lvCadastros.getItems().addAll(repositorio.findAll());
+		List<Produto> prods = repositorio.findAll();
+		
+		if(prods != null && prods.size() > 0){
+			prods.removeIf((p) -> !Tipo.Consumo.equals(p.getTipo()));
+		}
+		
+		this.lvCadastros.getItems().addAll(prods);
 	}
 
 	@Override
@@ -54,7 +61,7 @@ public class SelecaoTabelaProdutos extends Selecao<Produto> {
 		List<Produto> itens = lvCadastros.getSelectionModel().getSelectedItems();
 		
 		if(tabelaAuxiliar != null){
-			tabelaAuxiliar.getItems().clear();
+			//tabelaAuxiliar.getItems().clear();
 			tabelaAuxiliar.getItems().addAll(itens);
 		} else{
 			throw new RuntimeException("Tabela auxiliar não declarada");

@@ -20,7 +20,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
 
 public class VisaoQuadroEstrutural extends VBox {
@@ -45,7 +44,6 @@ public class VisaoQuadroEstrutural extends VBox {
 		apresentador = Apresentador.obterInstancia();
 		
 		tabela.getColumns().addAll(obterColunaGrupamento(),
-									 obterColunaTurma(),
 									 obterColunaAlunosMatriculados(),
 									 obterColunaProfessor()
 									);
@@ -154,20 +152,6 @@ public class VisaoQuadroEstrutural extends VBox {
 					return roiw;					
 				});
 		return colunaAlunosMatriculados;
-	}
-
-	private TableColumn<Turma, String> obterColunaTurma() {
-		TableColumn<Turma, String> colunaTurma = new TableColumn<>("Turma");
-		colunaTurma.setCellValueFactory(new PropertyValueFactory<>("nome"));
-		colunaTurma.setCellFactory(TextFieldTableCell.<Turma>forTableColumn());
-		colunaTurma.setOnEditCommit(e -> {
-			Turma t = e.getRowValue();
-			t.setNome(e.getNewValue());
-			
-			servico.salvarTurma(t);
-		});
-		
-		return colunaTurma;
 	}
 	
 	// TODO: testar num ambiente apropriado

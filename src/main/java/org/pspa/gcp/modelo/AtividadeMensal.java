@@ -10,6 +10,11 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+/**
+ * @author Marcelo Pablo
+ * 
+ * @version 0.1: pronto para entrega
+ * */
 @Entity
 public class AtividadeMensal {
 	
@@ -51,8 +56,6 @@ public class AtividadeMensal {
 			 LocalDate.now().getMonth());
 	}
 
-	
-	
 	public LocalDate getPrimeiroDia() {
 		return primeiroDia;
 	}

@@ -3,6 +3,7 @@ package org.pspa.gcp.visao.selecao;
 import org.pspa.gcp.visao.Apresentador;
 import org.pspa.gcp.visao.Lista.FabricaListas;
 import org.springframework.context.ApplicationContext;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 
 import javafx.scene.Scene;
@@ -40,6 +41,8 @@ public abstract class Selecao<T> extends VBox {
 	
 	ApplicationContext contextoSpring;
 	
+	JpaRepository<T, ?> repositorio;
+	
 	/** 
 	 * Construtor principal
 	 * 
@@ -72,12 +75,14 @@ public abstract class Selecao<T> extends VBox {
 
 		this.getChildren().addAll(lvCadastros, bOk);
 		
-		Scene cenaSobreposta = new Scene(this, 100, 200);
+		Scene cenaSobreposta = new Scene(this);
 		sSobreposto.setScene(cenaSobreposta);
 		sSobreposto.show();
 	}	
 	
-	protected abstract void popularVisao();
+	protected void popularVisao() {
+		this.lvCadastros.getItems().addAll(repositorio.findAll());
+	}
 	
 	protected abstract void definirRepositorio();
 }

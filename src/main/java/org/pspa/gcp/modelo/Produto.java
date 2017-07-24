@@ -6,8 +6,13 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 import org.pspa.gcp.modelo.enums.Semana;
+import org.pspa.gcp.modelo.enums.Tipo;
 
-
+/**
+ * @author Marcelo Pablo
+ * 
+ * @version 0.1
+ * */
 @Entity
 public class Produto{
 	
@@ -17,7 +22,11 @@ public class Produto{
 	
 	private String nome;
 		
-	private String segunda,
+	private String medida;
+	
+	private int necessario;
+	
+	private int segunda,
 				   terca,
 				   quarta,
 				   quinta,
@@ -28,26 +37,32 @@ public class Produto{
 	private int estoque;
 				//balanco;
 	
+	private Tipo tipo;
+	
 	public Produto() {
 		this.nome = "";
 		this.estoque = 0;
-		this.segunda = "0";
-		this.terca = "0";
-		this.quarta = "0";
-		this.quinta = "0";
-		this.sexta = "0";
+		this.necessario = 0;
+		this.segunda = 0;
+		this.terca = 0;
+		this.quarta = 0;
+		this.quinta = 0;
+		this.sexta = 0;
+		this.medida = "";
+		this.setTipo(null);
 	}
 	
-	public Produto(String nome, int estoque, int balanco, String segunda, String terca, String quarta, String quinta, String sexta, Semana semana) {
+	public Produto(String nome, int estoque, Tipo tipo, String medida, int segunda, int terca, int quarta, int quinta, int sexta, Semana semana) {
 		this.nome = nome;
 		this.estoque = estoque;
-		this.segunda = "segunda";
-		this.terca = "terca";
-		this.quarta = "quarta";
-		this.quinta = "quinta";
-		this.sexta = "sexta";
+		this.segunda = segunda;
+		this.medida = medida;
+		this.terca = terca;
+		this.setTipo(tipo);
+		this.quarta = quarta;
+		this.quinta = quinta;
+		this.sexta = sexta;
 		this.semana = semana;
-
 	}
 
 	public Integer getId() {
@@ -66,43 +81,43 @@ public class Produto{
 		this.nome = nome;
 	}
 
-	public String getSegunda() {
+	public int getSegunda() {
 		return segunda;
 	}
 
-	public void setSegunda(String segunda) {
+	public void setSegunda(int segunda) {
 		this.segunda = segunda;
 	}
 
-	public String getTerca() {
+	public int getTerca() {
 		return terca;
 	}
 
-	public void setTerca(String terca) {
+	public void setTerca(int terca) {
 		this.terca = terca;
 	}
 
-	public String getQuarta() {
+	public int getQuarta() {
 		return quarta;
 	}
 
-	public void setQuarta(String quarta) {
+	public void setQuarta(int quarta) {
 		this.quarta = quarta;
 	}
 
-	public String getQuinta() {
+	public int getQuinta() {
 		return quinta;
 	}
 
-	public void setQuinta(String quinta) {
+	public void setQuinta(int quinta) {
 		this.quinta = quinta;
 	}
 
-	public String getSexta() {
+	public int getSexta() {
 		return sexta;
 	}
 
-	public void setSexta(String sexta) {
+	public void setSexta(int sexta) {
 		this.sexta = sexta;
 	}
 
@@ -124,5 +139,35 @@ public class Produto{
 
 	public String toString(){
 		return this.nome;
+	}
+
+	public String getMedida() {
+		return medida;
+	}
+
+	public void setMedida(String medida) {
+		this.medida = medida;
+	}
+
+	public Tipo getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(Tipo tipo) {
+		this.tipo = tipo;
+	}
+
+	public int getNecessario() {
+		return getSegunda() + getTerca() + getQuarta() + getQuinta() + getSexta() + necessario;
+	}
+	
+	public void setNecessario(int necessario){
+		this.necessario = necessario;
+	}
+
+	public int getComprar() {
+		int qtd = getNecessario() - getEstoque();
+		
+		return qtd > 0 ? qtd : 0;
 	}
 }

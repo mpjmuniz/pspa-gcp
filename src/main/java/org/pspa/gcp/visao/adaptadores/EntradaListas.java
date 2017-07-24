@@ -11,11 +11,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.layout.VBox;
 
-public class EntradaListas<T> extends VBox implements Adaptador<List<T>> {
+@SuppressWarnings("rawtypes")
+public class EntradaListas<T> extends VBox implements Adaptador<List> {
 
-	private ListaElementos<T> lista;
+	/* TODO: modificar usos desta classe para usos de uma janela particular que lista os elementos participantes da relação*/
 	
-	private Type tipo;
+	private ListaElementos<T> lista;
 	
 	public EntradaListas(Type tipo) {
 		super();
@@ -30,21 +31,28 @@ public class EntradaListas<T> extends VBox implements Adaptador<List<T>> {
 		FabricaListas<T> fl = new FabricaListas<>(SelectionMode.MULTIPLE);
 		lista = fl.construir();
 		
-		this.tipo = tipo;
-		
 		texto = tipo.toString();
-		texto = texto.substring(texto.indexOf("<") + 1, texto.indexOf(">"));
+		final String textoFinal = texto.substring(texto.indexOf("<") + 1, texto.indexOf(">"));
 
-		textoBotao = "Selecionar " + texto.substring(texto.lastIndexOf('.') + 1) + "s";
+		textoBotao = "Selecionar " + textoFinal.substring(textoFinal.lastIndexOf('.') + 1) + "s";
 
-		bElementos.setOnAction(e -> apresentador.selecionar(tipo.getClass(), lista));
+		bElementos.setOnAction((e) -> {
+			
+			try {
+				apresentador.selecionar(Class.forName(textoFinal), lista);
+			} catch (ClassNotFoundException e1) {
+				e1.printStackTrace();
+			}
+		});
+		
 		bElementos.setText(textoBotao);
 		this.getChildren().addAll(lista, bElementos);
 	}
 
 	@Override
 	public boolean estaValido() {
-		return lista.getItems().size() != 0;
+		//return lista.getItems().size() != 0;
+		return true;
 	}
 
 	@Override
@@ -52,21 +60,21 @@ public class EntradaListas<T> extends VBox implements Adaptador<List<T>> {
 		return lista.getItems();
 	}
 
-	@Override
-	public void definirValor(List<T> valor) {
-		this.lista.getItems().addAll(valor);
-		
-	}
-
 	@SuppressWarnings("unchecked")
 	@Override
-	public Class<List<T>> obterTipo() {
-		return (Class<List<T>>) tipo.getClass();
+	public void definirValor(List valor) {
+		if(valor != null && valor.size() > 0){		
+			this.lista.getItems().addAll((List<T>) valor);
+		}
+	}
+
+	@Override
+	public Class<List> obterTipo() {
+		return List.class;
 	}
 
 	@Override
 	public void apagar() {
 		this.lista.getItems().removeAll(this.lista.getItems());
 	}
-
 }
