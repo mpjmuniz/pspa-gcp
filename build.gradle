@@ -34,4 +34,11 @@ dependencies {
     compile("postgresql:postgresql:9.1-901-1.jdbc4")
 	compileOnly('org.springframework.boot:spring-boot-configuration-processor')
 	testCompile('org.springframework.boot:spring-boot-starter-test')
+	testCompile('org.testfx:testfx-core:4.0.+')
+    testCompile('org.testfx:testfx-legacy:4.0.+', {
+        exclude group: "junit", module: "junit"
+    })
+	testCompile('junit:junit:4.10')
 }
+
+    

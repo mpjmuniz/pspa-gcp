@@ -1,8 +1,10 @@
 package org.pspa.gcp.visao.selecao;
 
+import org.pspa.gcp.modelo.Aluno;
+import org.pspa.gcp.modelo.Funcionario;
 import org.pspa.gcp.modelo.Produto;
 import org.pspa.gcp.modelo.Turma;
-import org.pspa.gcp.visao.Lista.ListaElementos;
+import org.pspa.gcp.visao.adaptadores.EntradaListas;
 import org.pspa.gcp.visao.adaptadores.EntradaObjetos;
 import org.springframework.context.ApplicationContext;
 
@@ -10,7 +12,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TableView;
 
 public class SelecaoFabrica {
-	private ListaElementos<?> leElementos;
+	private EntradaListas<?, ?> eListas;
 	
 	private TableView<?> tvElementos;
 	
@@ -20,25 +22,25 @@ public class SelecaoFabrica {
 	
 	private ApplicationContext contextoSpring;
 	
-	private EntradaObjetos<?> eObjetos; 
+	private EntradaObjetos<?, ?> eObjetos; 
 	
-	public SelecaoFabrica(ListaElementos<?> leElementos, EntradaObjetos<?> eObjetos, TableView<?> tv, Class<?> classe, SelectionMode modo,
+	public SelecaoFabrica(EntradaListas<?, ?> leElementos, EntradaObjetos<?, ?> eObjetos, TableView<?> tv, Class<?> classe, SelectionMode modo,
 			ApplicationContext contextoSpring) {
 		super();
 		this.eObjetos = eObjetos;
 		this.tvElementos = tv;
-		this.leElementos = leElementos;
+		this.eListas = leElementos;
 		this.classe = classe;
 		this.modo = modo;
 		this.contextoSpring = contextoSpring;
 	}
 
-	public SelecaoFabrica(ListaElementos<?> leElementos, Class<?> classe, SelectionMode modo,
+	public SelecaoFabrica(EntradaListas<?, ?> leElementos, SelectionMode modo,
 			ApplicationContext contextoSpring) {
-		this(leElementos, null, null, classe, modo, contextoSpring);
+		this(leElementos, null, null, leElementos.obterTipo(), modo, contextoSpring);
 	}
 	
-	public SelecaoFabrica(EntradaObjetos<?> eObjs, SelectionMode modo,
+	public SelecaoFabrica(EntradaObjetos<?, ?> eObjs, SelectionMode modo,
 			ApplicationContext contextoSpring) {
 		this(null, eObjs, null, eObjs.obterTipo(), modo, contextoSpring);
 	}
@@ -62,14 +64,20 @@ public class SelecaoFabrica {
 			} else {
 				if(Turma.class.equals(classe)){
 					selecao = new SelecaoUnicaTurma(contextoSpring, eObjetos);
+				} else if(Funcionario.class.equals(classe)){
+					selecao = new SelecaoUnicaFuncionario(contextoSpring, eObjetos);
 				}
 			}
 		} else {
-			if(leElementos == null && tvElementos == null){
+			if(eListas == null && tvElementos == null){
 				throw new IllegalArgumentException("Defina a lista ou tabela que receberá os elementos"); 
 			} else{
 				if(Produto.class.equals(classe)){
 					selecao = new SelecaoTabelaProdutos(contextoSpring, (TableView<Produto>) tvElementos);
+				} else if(Aluno.class.equals(eListas.obterTipoArgumento())){
+					selecao = new SelecaoMultiplaAlunos(contextoSpring, eListas);
+				} else if(Funcionario.class.equals(eListas.obterTipoArgumento())){
+					selecao = new SelecaoMultiplaFuncionarios(contextoSpring, eListas);
 				}
 			}
 		}

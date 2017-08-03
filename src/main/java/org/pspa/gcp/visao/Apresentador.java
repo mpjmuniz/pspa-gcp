@@ -4,7 +4,7 @@ import org.pspa.gcp.modelo.Aluno;
 import org.pspa.gcp.modelo.Funcionario;
 import org.pspa.gcp.modelo.Inscrito;
 import org.pspa.gcp.modelo.Turma;
-import org.pspa.gcp.visao.Lista.ListaElementos;
+import org.pspa.gcp.visao.adaptadores.EntradaListas;
 import org.pspa.gcp.visao.adaptadores.EntradaObjetos;
 import org.pspa.gcp.visao.almoxarifado.VisaoEstoqueConsumo;
 import org.pspa.gcp.visao.almoxarifado.VisaoEstoqueDidatico;
@@ -298,10 +298,22 @@ public class Apresentador {
 	 *            campo que guardará nome e referência do elemento
 	 */
 	@SuppressWarnings("unused")
-	public void selecionar(EntradaObjetos<?> eObj) {
+	public void selecionar(EntradaObjetos<?, ?> eObj) {
 
 		SelecaoFabrica fab = new SelecaoFabrica(eObj, SelectionMode.SINGLE, contextoSpring);
 		Selecao<?> selecao = fab.construirSelecao(eObj.obterValor());
+	}
+	
+	/**
+	 * Método para se selecionar vários elementos de uma lista
+	 * 
+	 * @param eLst campo que encapsula todos os dados necessários para a operação 
+	 */
+	@SuppressWarnings("unused")
+	public void selecionar(EntradaListas<?, ?> eLst) {
+
+		SelecaoFabrica fab = new SelecaoFabrica(eLst, SelectionMode.MULTIPLE, contextoSpring);
+		Selecao<?> selecao = fab.construirSelecao(eLst.obterValor());
 	}
 	
 	/**

@@ -6,6 +6,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
+ * Entidade que representa o conteúdo sendo passado para os alunos
+ * 
  * @author Marcelo Pablo
  * 
  * @version 0.1

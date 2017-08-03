@@ -24,13 +24,18 @@ public class VisaoInscritos extends VisaoCadastros<Inscrito>{
 	
 	@Override
 	public void popularVisaoInicialmente(){
+		this.lElementos.getItems().clear();
 		this.lElementos.getItems().addAll(repositorio.findAll());
 	}
 
 	@Override
 	public Inscrito persistir(Inscrito objeto) {
-		return repositorio.save(objeto);
+		if(objeto == null) return null;
 		
+		Inscrito obj = repositorio.findOne(objeto.getMid());
+		if(obj != null) return obj;
+		
+		return repositorio.save(objeto);
 	}
 
 	@Override
@@ -68,5 +73,11 @@ public class VisaoInscritos extends VisaoCadastros<Inscrito>{
 		persistir(objeto);
 		
 		apresentador.designarInscricao(inscrito);
+	}
+
+	@Override
+	protected Inscrito atualizarElemento(Inscrito elemento) {
+		if(elemento == null) return null;
+		return repositorio.findOne(elemento.getMid());
 	}
 }

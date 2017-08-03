@@ -10,43 +10,50 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 
 import org.pspa.gcp.modelo.enums.Funcao;
 import org.pspa.gcp.modelo.enums.Grupamento;
 
+/**
+ * Entidade que representa uma turma presente na instituição
+ * 
+ * @author Marcelo Pablo
+ *
+ */
 @Entity
 public class Turma {
-
-	/** TODO: tirar atributo nome e ver no que dá*/
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
-
-	private String nome;
+	private Integer mid;
 	
 	private Grupamento grupamento;
 	
-	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "turma", fetch = FetchType.LAZY, optional = true)
+	private Funcionario professor;
+	
+	@OneToMany(mappedBy = "turma", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
 	private List<Aluno> alunos;
 	
-	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-	private List<Funcionario> funcionarios;
-
+	@OneToMany(mappedBy = "turma", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	private List<Funcionario> auxiliares;
+	
 	public Turma(Grupamento grup) {
-		this(grup, new ArrayList<Funcionario>(),
+		this(1, grup, null, new ArrayList<Funcionario>(),
 				new ArrayList<Aluno>());
 	}
 	
 	public Turma() {
-		this(null, new ArrayList<Funcionario>(),
+		this(1, null, null, new ArrayList<Funcionario>(),
 				new ArrayList<Aluno>());
 	}
 
-	public Turma(Grupamento grupamento, List<Funcionario> funcionarios, List<Aluno> alunos) {
-		this.setNome((grupamento != null ) ?  grupamento.toString() : "[Nova]");
+	public Turma(Integer mid, Grupamento grupamento, Funcionario professor, List<Funcionario> funcionarios, List<Aluno> alunos) {
+		this.mid = mid;
+		this.professor = professor;
 		this.grupamento = grupamento;
-		this.funcionarios = funcionarios;
+		this.auxiliares = funcionarios;
 		this.alunos = alunos;
 	}
 
@@ -54,17 +61,17 @@ public class Turma {
 		return alunos;
 	}
 
-	@SuppressWarnings("unchecked")
-	public void setAlunos(List<?> alunos) {
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void setAlunos(List alunos) {
 		this.alunos = (List<Aluno>) alunos;
 	}
 
 	public void adicionarAuxiliares(List<Funcionario> auxiliares) {
-		this.funcionarios.addAll(auxiliares);
+		this.auxiliares.addAll(auxiliares);
 	}
 	
 	public void adicionarAuxiliares(Funcionario auxiliar) {
-		this.funcionarios.add(auxiliar);
+		this.auxiliares.add(auxiliar);
 	}
 
 	public Grupamento getGrupamento() {
@@ -72,38 +79,35 @@ public class Turma {
 	}
 
 	public List<Funcionario> getAuxiliares(){
-		List<Funcionario> auxiliares = new ArrayList<Funcionario>();
-		
-		for(Funcionario f : funcionarios){
-			if(f.getFuncao() == Funcao.Auxiliar){
-				auxiliares.add(f);
-			}
-		}
 		
 		return auxiliares;
 	}
 	
 	public List<Funcionario> getFuncionarios(){
+		List<Funcionario> lst = new ArrayList<Funcionario>();
 		
-		return this.funcionarios;
+		lst.add(professor);
+		lst.addAll(auxiliares);
+		
+		return lst;
 	}
 	
-	/*@SuppressWarnings("unchecked")
-	public void setFuncionarios(List<?> fs){
-		this.funcionarios = (List<Funcionario>) fs;
-	}*/
+	// mesma coisa, adicionado para funcionar a visão turma reflexivamente
+	@SuppressWarnings({ "unchecked", "rawtypes" })
+	public void setFuncionarios(List fs){
+		this.auxiliares = fs;
+	}
 	
-	public void setFuncionarios(List<Funcionario> fs){
-		this.funcionarios = (List<Funcionario>) fs;
+	public void setAuxiliares(List<Funcionario> fs){
+		this.auxiliares = (List<Funcionario>) fs;
 	}
 	
 	public Funcionario getProfessor() {
-		for(Funcionario f : funcionarios){
-			if(f.getFuncao() == Funcao.Professor) {
-				return f;
-			}
-		}
-		return null;
+		return professor;
+	}
+	
+	public Funcionario getFuncionario(){
+		return getProfessor();
 	}
 
 	public void setGrupamento(Grupamento grupamento) {
@@ -111,39 +115,38 @@ public class Turma {
 	}
 
 	public void setProfessor(Funcionario professor) {
-		if(professor.getFuncao() != Funcao.Professor){
+			
+		if(professor != null && professor.getFuncao() != Funcao.Professor){
 			throw new IllegalArgumentException("O Funcionário precisa ter a função \"professor\" definida para ser posto como professor.");
 		}
 		
-		for(Funcionario f : funcionarios){
-			if(f.getFuncao() == Funcao.Professor){
-				funcionarios.remove(f);
-			}
-			
-			funcionarios.add(professor);
+		this.professor = professor;
+	}
+	
+	public void setFuncionario(Funcionario f){
+		if(f == null) return;
+		if(f.getFuncao().equals(Funcao.Professor)){
+			setProfessor(f);
+		} else {
+			this.auxiliares.clear();
+			adicionarAuxiliares(f);
 		}
-		
-		this.funcionarios.add(professor);
 	}
 
 	public Integer getMid(){
-		return this.id;
+		return this.mid;
 	}
 	
 	public void setMid(Integer id){
-		this.id = id;
+		this.mid = id;
 	}
 	
 	@Override
 	public String toString(){
-		return nome;
+		return (grupamento == null) ? "[Nova]" : grupamento.toString();
 	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	public void setNome(String nome) {
-		this.nome = nome;
+	
+	public void setNome(String nome){
+		return;
 	}
 }

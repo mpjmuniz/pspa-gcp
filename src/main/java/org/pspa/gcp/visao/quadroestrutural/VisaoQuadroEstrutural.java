@@ -18,7 +18,6 @@ import javafx.print.PrinterJob;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
@@ -82,19 +81,6 @@ public class VisaoQuadroEstrutural extends VBox {
 					Grupamento g = cellData.getValue().getGrupamento();
 					return new ReadOnlyObjectWrapper<Grupamento>(g);
 				});
-		
-		// Set a ComboBoxTableCell, so we can selects a value from a list
-		colunaGrupamento.setCellFactory(
-			ComboBoxTableCell.<Turma, Grupamento>forTableColumn(Grupamento.values()));
-		
-		// Add an event handler to handle the edit commit event.
-		// It displays the selected value on the standard output
-		colunaGrupamento.setOnEditCommit(e -> {
-			Turma t = e.getRowValue();
-			t.setGrupamento(e.getNewValue());
-			servico.salvarTurma(t);
-		});
-		
 		return colunaGrupamento;
 
 	}
@@ -111,8 +97,10 @@ public class VisaoQuadroEstrutural extends VBox {
 			
 			coluna = new TableColumn<>("Auxiliar de Creche");
 			
+			// TODO verificar
+			
 			coluna.setCellValueFactory(e -> {
-				List<Funcionario> fs = e.getValue().getAuxiliares();
+				List<Funcionario> fs = servico.obterAuxiliares(e.getValue());
 				
 				for(Funcionario f : fs){
 					if(!inseridos.contains(f)){
@@ -148,7 +136,7 @@ public class VisaoQuadroEstrutural extends VBox {
 		colunaAlunosMatriculados.setCellValueFactory(
 				cellData -> {
 					Turma t = cellData.getValue();
-					ObservableValue<Number> roiw = new ReadOnlyIntegerWrapper(t.getAlunos().size());
+					ObservableValue<Number> roiw = new ReadOnlyIntegerWrapper(servico.obterQtdAlunos(t));
 					return roiw;					
 				});
 		return colunaAlunosMatriculados;

@@ -14,6 +14,8 @@ import org.pspa.gcp.modelo.enums.Sexo;
 
 
 /**
+ * Entidade que representa os alunos inscritos, candidatos à vagas
+ * 
  * @author Marcelo Pablo 
  * 
  * @version 0.1
@@ -53,11 +55,9 @@ public class Inscrito{
 
 	private Boolean visitado;
 	
-	
-
 	public Inscrito() {
-		this("João", LocalDate.now(), Sexo.Masculino, "Joana", 20, "Faxineira", "José", 30, "Marceneiro", "Rua zó",
-				"perto", "23112412", "porque sim", "pai", "Alguém", LocalDate.now(), false);
+		this("", null, null, "", 0, "", "", 0, "", "",
+				"", "", "", "", "", null, false);
 	}
 
 	public Inscrito(String nome_da_criança, LocalDate data_de_nascimento, Sexo sexo, String mãe, Integer idade_mãe,

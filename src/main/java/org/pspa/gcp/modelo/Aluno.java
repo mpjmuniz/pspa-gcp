@@ -2,6 +2,7 @@ package org.pspa.gcp.modelo;
 
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -15,6 +16,8 @@ import org.pspa.gcp.modelo.enums.UF;
 
 @Entity
 /** @author Marcelo Muniz
+ * 
+ * 	Entidade que representa um aluno particular da instituição
  * 
  * Versão 0.1: pronto para entrega
  * */
@@ -74,7 +77,7 @@ public class Aluno implements Participante{
 	// Responsável
 	private String responsável_pelo_preenchimento;
 
-	@ManyToOne
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "turma_id")
 	private Turma turma;
 

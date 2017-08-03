@@ -5,6 +5,11 @@ import java.time.LocalDate;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
+/**
+ * Entidade que representa uma transação monetária
+ * @author Marcelo Pablo
+ *
+ */
 @Entity
 public class Transacao {
 	
@@ -13,25 +18,20 @@ public class Transacao {
 	
 	private String descricao;
 	
-	public Transacao(LocalDate data, String descricao, Double entrada, Double saida, Double balanco) {
+	public Transacao(LocalDate data, String descricao, Double entrada, Double saida) {
 		super();
 		this.data = data;
 		this.descricao = descricao;
 		this.entrada = entrada;
 		this.saida = saida;
-		this.balanco = balanco;
 	}
 
 	// TODO verificar melhor tipo para isso
 	private Double entrada,
-				   saida, 
-				   balanco;
+				   saida; 
 	
 	public Transacao(){
-		this.data = null;
-		this.descricao = "";
-		this.entrada = 0.0;
-		this.saida = 0.0;
+		this(null, "", 0.0, 0.0);
 	}
 
 	public LocalDate getData() {
@@ -56,8 +56,6 @@ public class Transacao {
 
 	public void setEntrada(Double entrada) {
 		this.entrada = entrada;
-		
-		this.balanco = this.entrada - this.saida;
 	}
 
 	public Double getSaida() {
@@ -66,11 +64,9 @@ public class Transacao {
 
 	public void setSaida(Double saida) {
 		this.saida = saida;
-		
-		this.balanco = this.entrada - this.saida;
 	}
 
 	public Double getBalanco() {
-		return balanco;
+		return entrada - saida;
 	}	
 }

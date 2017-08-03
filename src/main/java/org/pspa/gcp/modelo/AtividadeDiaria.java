@@ -10,6 +10,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
+ * Entidade que representa as atividades desenvolvidas num dia
+ * 
  * versão 0.1: pronto para entrega
  * */
 @Entity

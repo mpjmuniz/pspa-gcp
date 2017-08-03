@@ -1,22 +1,21 @@
 package org.pspa.gcp.visao.selecao;
 
-import org.pspa.gcp.modelo.Participante;
+import org.pspa.gcp.modelo.Funcionario;
 import org.pspa.gcp.modelo.Turma;
-import org.pspa.gcp.modelo.repositorios.RepositorioTurma;
+import org.pspa.gcp.modelo.repositorios.RepositorioFuncionario;
 import org.pspa.gcp.visao.adaptadores.EntradaObjetos;
 import org.springframework.context.ApplicationContext;
 
 import javafx.scene.control.SelectionMode;
 
-public class SelecaoUnicaTurma extends Selecao<Turma> {
+public class SelecaoUnicaFuncionario extends Selecao<Funcionario> {
 
-	// TODO: ajustar entrada de objetos para se adaptar ao objeto dono
 	
 	/** campo que auxilia a recuperação do elemento selecionado na árvore*/
-	private EntradaObjetos<Turma, Participante> campoAuxiliar;
+	private EntradaObjetos<Funcionario, Turma> campoAuxiliar;
 	
 	/** campo que guarda o objeto sendo alterado */
-	private Participante referencia;
+	private Turma referencia;
 	
 	/** 
 	 * Construtor para campos
@@ -24,9 +23,9 @@ public class SelecaoUnicaTurma extends Selecao<Turma> {
 	 * @param campoAuxiliar nó JavaFX (TextField) que ajuda a recuperar o elemento selecionado
 	 **/
 	@SuppressWarnings("unchecked")
-	public SelecaoUnicaTurma(ApplicationContext contextoSpring, EntradaObjetos<?, ?> eObjetos){
-		super(Turma.class, SelectionMode.SINGLE, contextoSpring);
-		this.campoAuxiliar = (EntradaObjetos<Turma, Participante>) eObjetos;
+	public SelecaoUnicaFuncionario(ApplicationContext contextoSpring, EntradaObjetos<?, ?> eObjetos){
+		super(Funcionario.class, SelectionMode.SINGLE, contextoSpring);
+		this.campoAuxiliar = (EntradaObjetos<Funcionario, Turma>) eObjetos;
 		this.referencia = campoAuxiliar.getDono();
 		
 		lvCadastros.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
@@ -37,7 +36,7 @@ public class SelecaoUnicaTurma extends Selecao<Turma> {
 	
 	@Override
 	protected void definirRepositorio(){
-		repositorio = contextoSpring.getBean(RepositorioTurma.class);
+		repositorio = contextoSpring.getBean(RepositorioFuncionario.class);
 	}
 	
 	/**
@@ -46,7 +45,7 @@ public class SelecaoUnicaTurma extends Selecao<Turma> {
 	 * 	uso exclusivo para seleção de campos, onde {@code modo_seleção} = 0
 	 * */
 	private void designarItem() {
-		Turma selecao = lvCadastros.getSelectionModel().getSelectedItem();
+		Funcionario selecao = lvCadastros.getSelectionModel().getSelectedItem();
 		
 		if(campoAuxiliar != null){
 			campoAuxiliar.definirValor(selecao);
@@ -57,13 +56,11 @@ public class SelecaoUnicaTurma extends Selecao<Turma> {
 		if(selecao != null) {
 			campoAuxiliar.getTfElemento().setText(selecao.toString());
 			
-			referencia.setTurma(selecao);
+			referencia.setProfessor(selecao);
 		} else {
 			campoAuxiliar.getTfElemento().setText("Nenhum(a)");
 		}
 		
 		sSobreposto.close();
 	}
-	
-	// TODO: pensar num modo de passar turma para objeto (funcionário ou aluno)
 }

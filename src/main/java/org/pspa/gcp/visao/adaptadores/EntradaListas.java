@@ -1,24 +1,29 @@
 package org.pspa.gcp.visao.adaptadores;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.List;
 
 import org.pspa.gcp.visao.Apresentador;
-import org.pspa.gcp.visao.Lista.FabricaListas;
-import org.pspa.gcp.visao.Lista.ListaElementos;
 
 import javafx.scene.control.Button;
-import javafx.scene.control.SelectionMode;
-import javafx.scene.layout.VBox;
 
 @SuppressWarnings("rawtypes")
-public class EntradaListas<T> extends VBox implements Adaptador<List> {
-
-	/* TODO: modificar usos desta classe para usos de uma janela particular que lista os elementos participantes da relação*/
+public class EntradaListas<T, D> extends Button implements Adaptador<List> {
 	
-	private ListaElementos<T> lista;
+	private List<T> elementos;
 	
-	public EntradaListas(Type tipo) {
+	private D dono;
+	
+	private Class<T> classeAssociada;
+	
+	private Class<D> classeDono;
+	
+	private Method setter;
+	
+	@SuppressWarnings("unchecked")
+	public EntradaListas(Type tipo, Class<D> clsDona) throws NoSuchMethodException, SecurityException, ClassNotFoundException{
 		super();
 		
 		Apresentador apresentador = Apresentador.obterInstancia();
@@ -26,29 +31,22 @@ public class EntradaListas<T> extends VBox implements Adaptador<List> {
 		String textoBotao = null, 
 			   texto = null;
 		
-		Button bElementos = new Button();
-
-		FabricaListas<T> fl = new FabricaListas<>(SelectionMode.MULTIPLE);
-		lista = fl.construir();
-		
 		texto = tipo.toString();
 		final String textoFinal = texto.substring(texto.indexOf("<") + 1, texto.indexOf(">"));
-
-		textoBotao = "Selecionar " + textoFinal.substring(textoFinal.lastIndexOf('.') + 1) + "s";
-
-		bElementos.setOnAction((e) -> {
-			
-			try {
-				apresentador.selecionar(Class.forName(textoFinal), lista);
-			} catch (ClassNotFoundException e1) {
-				e1.printStackTrace();
-			}
-		});
 		
-		bElementos.setText(textoBotao);
-		this.getChildren().addAll(lista, bElementos);
+		
+		classeAssociada = (Class<T>) Class.forName(textoFinal);
+		classeDono = clsDona;
+		
+		setter = classeDono.getDeclaredMethod("set" + textoFinal.substring(textoFinal.lastIndexOf('.') + 1) + "s", List.class);
+		
+		textoBotao = "Selecionar " + textoFinal.substring(textoFinal.lastIndexOf('.') + 1) + "s";
+		
+		this.setOnAction((e) -> apresentador.selecionar(this));
+		
+		this.setText(textoBotao);
 	}
-
+	
 	@Override
 	public boolean estaValido() {
 		//return lista.getItems().size() != 0;
@@ -57,14 +55,22 @@ public class EntradaListas<T> extends VBox implements Adaptador<List> {
 
 	@Override
 	public List<T> obterValor() {
-		return lista.getItems();
+		return elementos;
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public void definirValor(List valor) {
-		if(valor != null && valor.size() > 0){		
-			this.lista.getItems().addAll((List<T>) valor);
+		this.elementos = (List<T>) valor;
+		
+		if(dono != null){
+			if(valor != null){		
+				try {
+					setter.invoke(dono, valor);
+				} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 	}
 
@@ -72,9 +78,27 @@ public class EntradaListas<T> extends VBox implements Adaptador<List> {
 	public Class<List> obterTipo() {
 		return List.class;
 	}
+	
+	public Class<T> obterTipoArgumento() {
+		return classeAssociada;
+	}
 
 	@Override
 	public void apagar() {
-		this.lista.getItems().removeAll(this.lista.getItems());
+		if(dono == null) return;
+		try {
+			this.setter.invoke(dono, (Object) null);
+		} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	public void setDono(Object objeto) {
+		this.dono = (D) objeto;
+	}
+	
+	public D getDono(){
+		return this.dono;
 	}
 }

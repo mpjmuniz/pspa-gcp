@@ -9,6 +9,8 @@ import org.pspa.gcp.modelo.enums.Semana;
 import org.pspa.gcp.modelo.enums.Tipo;
 
 /**
+ * Entidade que representa um produto sendo armazenado no estoque
+ * 
  * @author Marcelo Pablo
  * 
  * @version 0.1

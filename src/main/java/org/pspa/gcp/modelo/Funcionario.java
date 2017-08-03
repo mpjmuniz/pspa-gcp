@@ -1,18 +1,22 @@
 package org.pspa.gcp.modelo;
 import java.time.LocalDate;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 import org.pspa.gcp.modelo.enums.Funcao;
 import org.pspa.gcp.modelo.enums.Instrucao;
 import org.pspa.gcp.modelo.enums.Sexo;
 
 /**
+ * Entidade que representa um funcionário da instituição
+ * 
  * @version 0.1
  * 
  * @author Marcelo Pablo
@@ -42,15 +46,18 @@ public class Funcionario implements Participante{
 	
 	private Instrucao formacao;
 	
-	@ManyToOne
+	@ManyToOne(optional = true, cascade = CascadeType.ALL)
+	@OneToOne(optional = true, cascade = CascadeType.ALL)
 	@JoinColumn(name = "turma_id")
 	private Turma turma;
 		
-	public Funcionario(String nome, Funcao funcao, Sexo sexo, 
+	public Funcionario(Integer mid, String nome, Funcao funcao, Sexo sexo, 
 			LocalDate dataIngresso, LocalDate dataNascimento,
 			String rg, String cpf, String titulo, Instrucao formacao,
 			String carteiraTrabalho, String endereco, String telefone, Turma turma) {
 		
+		
+		this.mid = mid;
 		this.nome = nome;
 		this.funcao = funcao;
 		this.sexo = sexo;
@@ -68,7 +75,7 @@ public class Funcionario implements Participante{
 	
 	public Funcionario() {
 		
-		this("", null, null, null, null, "", "", "", null, "", "", "", new Turma());
+		this(1, "", null, null, null, null, "", "", "", null, "", "", "", new Turma());
 	}
 
 	public Sexo getSexo() {

@@ -2,7 +2,9 @@ package org.pspa.gcp.visao.quadroestrutural;
 
 import java.util.List;
 
+import org.pspa.gcp.modelo.Funcionario;
 import org.pspa.gcp.modelo.Turma;
+import org.pspa.gcp.modelo.enums.Funcao;
 import org.pspa.gcp.modelo.repositorios.RepositorioAluno;
 import org.pspa.gcp.modelo.repositorios.RepositorioFuncionario;
 import org.pspa.gcp.modelo.repositorios.RepositorioTurma;
@@ -36,6 +38,18 @@ public class ServicoQuadroEstrutural {
 
 	public List<Turma> obterTurmas() {
 		return repositorioT.findAll();
+	}
+
+	public int obterQtdAlunos(Turma t) {
+		return repositorioA.findAlunosByTurma(t).size();
+	}
+
+	public List<Funcionario> obterAuxiliares(Turma value) {
+		List<Funcionario> auxs = repositorioF.findFuncionariosByTurma(value);
+		
+		auxs.removeIf(e -> e.getFuncao().equals(Funcao.Professor));
+		
+		return auxs;
 	}
 	
 	

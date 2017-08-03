@@ -11,7 +11,6 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 
-import org.pspa.gcp.modelo.Participante;
 import org.pspa.gcp.modelo.enums.Enumeracao;
 import org.pspa.gcp.visao.adaptadores.Adaptador;
 import org.pspa.gcp.visao.adaptadores.EntradaBooleanos;
@@ -175,11 +174,11 @@ public class ListagemCampos<T> extends GridPane {
 
 			} else if (campo.getType() == List.class) {
 				
-				no = new EntradaListas(campo.getGenericType());
+				no = new EntradaListas(campo.getGenericType(), classe);
 
 			} else if (campo.getType().isAnnotationPresent(Entity.class)) {
 
-				no = new EntradaObjetos(campo.getType());
+				no = new EntradaObjetos(campo.getType(), classe);
 				
 			} else {
 				throw new RuntimeException(
@@ -197,7 +196,8 @@ public class ListagemCampos<T> extends GridPane {
 				 | SecurityException 
 				 | NoSuchMethodException 
 				 | IllegalAccessException
-				 | InvocationTargetException e) {
+				 | InvocationTargetException
+				 | ClassNotFoundException e) {
 			
 			throw new RuntimeException("Problema na reflexão, de fora: " 
 									   + e.getLocalizedMessage());
@@ -275,9 +275,11 @@ public class ListagemCampos<T> extends GridPane {
 
 				nome = rotulo.obterValor();
 				nome = StringUtils.reverterNome(nome);
-
-				if(campo instanceof EntradaObjetos<?>){
-					((EntradaObjetos<?>) campo).setPartc((Participante) objeto);
+				
+				if(campo instanceof EntradaObjetos){
+					((EntradaObjetos<?, ?>) campo).setDono(objeto);
+				} else if(campo instanceof EntradaListas){
+					((EntradaListas<?, ?>) (Object) campo).setDono(objeto);
 				}
 				
 				getter = this.classe.getMethod("get" + nome);

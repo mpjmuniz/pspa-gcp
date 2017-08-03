@@ -18,16 +18,30 @@ public class VisaoFuncionarios extends VisaoCadastros<Funcionario>{
 	
 	@Override
 	public void popularVisaoInicialmente(){
+		this.lElementos.getItems().clear();
 		this.lElementos.getItems().addAll(repositorio.findAll());
 	}
 
 	@Override
 	public Funcionario persistir(Funcionario objeto) {
+		if(objeto == null) return null;
+		
+		Funcionario obj = repositorio.findOne(objeto.getMid());
+		if(obj != null) return obj;
+		
 		return repositorio.save(objeto);
 	}
 
 	@Override
 	public void deletar(Funcionario objeto) {
-		repositorio.delete(objeto);
+		if(objeto == null) return;
+		
+		repositorio.delete(objeto.getMid());
+	}
+
+	@Override
+	protected Funcionario atualizarElemento(Funcionario elemento) {
+		if(elemento == null) return null;
+		return repositorio.findOne(elemento.getMid());
 	}
 }

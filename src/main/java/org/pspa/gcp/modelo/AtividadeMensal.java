@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
+ * Entidade que representa as atividades desenvolvidas ao longo do mês
+ * 
  * @author Marcelo Pablo
  * 
  * @version 0.1: pronto para entrega
@@ -29,31 +31,33 @@ public class AtividadeMensal {
 	@OneToMany(targetEntity = AtividadeSemanal.class, fetch = FetchType.LAZY)
 	private List<AtividadeSemanal> semanas;
 
-	public AtividadeMensal(LocalDate primeiroDia, String tema, Integer ano, Month mes, AtividadeSemanal semana) {
-		this(primeiroDia, tema, ano, mes);
+	public AtividadeMensal(LocalDate primeiroDia, String tema, AtividadeSemanal semana) {
+		this(primeiroDia, tema);
 		semanas.add(semana);
 	}
 	
-	public AtividadeMensal(LocalDate primeiroDia, String tema, Integer ano, Month mes) {
+	public AtividadeMensal(LocalDate primeiroDia, String tema) {
 		super();
 		
-		if(primeiroDia.getDayOfMonth() != 1){
-			throw new IllegalArgumentException("O dia deve ser o primeiro de um dado mês");
+		if(primeiroDia == null){
+			primeiroDia = LocalDate.of(LocalDate.now().getYear(), 
+					  LocalDate.now().getMonthValue(), 
+					  1);
 		}
 		
+		if(primeiroDia.getDayOfMonth() != 1){
+			primeiroDia = primeiroDia.minusDays(primeiroDia.getDayOfMonth() - 1);
+		}
+		
+		this.primeiroDia = primeiroDia;
 		this.tema = tema;
-		this.ano = ano;
-		this.mes = mes;
+		this.ano = primeiroDia.getYear();
+		this.mes = primeiroDia.getMonth();
 		this.semanas = new ArrayList<>();
 	}
 
 	public AtividadeMensal() {
-		this(LocalDate.of(LocalDate.now().getYear(), 
-						  LocalDate.now().getMonthValue(), 
-						  1), 
-			 "", 
-			 LocalDate.now().getYear(), 
-			 LocalDate.now().getMonth());
+		this(null, "");
 	}
 
 	public LocalDate getPrimeiroDia() {

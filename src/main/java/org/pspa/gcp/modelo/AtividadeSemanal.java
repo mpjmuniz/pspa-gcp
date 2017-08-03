@@ -8,10 +8,11 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 /**
+ * Entidade que representa as atividades desenvolvidas ao longo da semana
+ * 
  * @author Marcelo Pablo
  * @version 0.1: pronto para entrega
  * */
@@ -21,32 +22,31 @@ public class AtividadeSemanal {
 	@Id
 	private LocalDate segunda;
 	
-	@ManyToOne
-	private AtividadeMensal mes;
-	
 	@OneToMany(targetEntity = AtividadeDiaria.class, fetch = FetchType.EAGER)
 	private List<AtividadeDiaria> dias;
 	
 	private String avaliacao;
 
-	public AtividadeSemanal(LocalDate segunda, AtividadeMensal mes) {
+	public AtividadeSemanal(LocalDate segunda) {
 		super();
 		
+		if(segunda == null){
+			int dias = LocalDate.now().getDayOfWeek().getValue() - 1;
+			segunda = LocalDate.now().minusDays(dias);
+		}
+		
 		if(!segunda.getDayOfWeek().equals(DayOfWeek.MONDAY)){
-			throw new IllegalArgumentException("este campo serve somente para a segunda feira desta semana");
+			int dias = segunda.getDayOfWeek().getValue() - 1;
+			segunda = segunda.minusDays(dias);
 		}
 		
 		this.dias = new ArrayList<>();		
-		this.mes = mes;
 		this.segunda = segunda;
 		this.avaliacao = "";
 	}
 	
 	public AtividadeSemanal(){
-		this.dias = null;
-		this.mes = null;
-		this.segunda = null;
-		this.avaliacao = "";
+		this(null);
 	}
 
 	public LocalDate getSegunda() {
@@ -71,13 +71,5 @@ public class AtividadeSemanal {
 
 	public void setAvaliacao(String avaliacao) {
 		this.avaliacao = avaliacao;
-	}
-
-	public AtividadeMensal getMes() {
-		return mes;
-	}
-
-	public void setMes(AtividadeMensal mes) {
-		this.mes = mes;
 	}
 }

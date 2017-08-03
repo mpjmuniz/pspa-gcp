@@ -67,17 +67,25 @@ public class VisaoTurmas extends VisaoCadastros<Turma>{
 
 	@Override
 	public void popularVisaoInicialmente(){
+		this.lElementos.getItems().clear();
 		this.lElementos.getItems().addAll(repositorio.findAll());
 	}
 
 	@Override
 	public Turma persistir(Turma objeto) {
+		if(objeto == null) return null;
+		
+		Turma obj = repositorio.findOne(objeto.getMid());
+		if(obj != null) return repositorio.save(obj);
+		
 		return repositorio.save(objeto);
 	}
 
 	@Override
 	public void deletar(Turma objeto) {
-		repositorio.delete(objeto);
+		if(objeto == null) return;
+		
+		repositorio.delete(objeto.getMid());
 	}
 	
 	public void imprimirAlunos(){
@@ -88,5 +96,11 @@ public class VisaoTurmas extends VisaoCadastros<Turma>{
 		
 		@SuppressWarnings("unused")
 		ListagemAlunosNascimento list = new ListagemAlunosNascimento(contexto, lElementos.getSelectionModel().getSelectedItem());
+	}
+
+	@Override
+	protected Turma atualizarElemento(Turma elemento) {
+		if(elemento == null) return null;
+		return repositorio.findOne(elemento.getMid());
 	}
 }

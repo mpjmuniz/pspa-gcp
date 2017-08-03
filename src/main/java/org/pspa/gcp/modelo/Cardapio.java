@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 /**
+ * Entidade que representa o cardápio, ou seja, o conjunto de produtos para um período de tempo
+ * 
  * @author Marcelo Pablo
  * 
  * @version 0.1
