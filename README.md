@@ -1,6 +1,6 @@
 # Gestor das Creches Paroquiais
 
-Sistema de gestÃ£o dos dados acadÃªmicos, financeiros e contratuais de colaboradores das creches administradas pela ParÃ³quia SÃ£o Pedro ApÃ³stolo.
+Sistema de gestão dos dados acadêmicos, financeiros e contratuais de colaboradores das creches administradas pela Paróquia São Pedro Apóstolo.
 
 > Autor: Marcelo Pablo de Jesus Muniz
 
@@ -15,15 +15,15 @@ Tecnologias utilizadas:
 * Microsoft Project
 
 Versão 0.1: 
-. Listagens de alunos, 
--		  	 funcionários
--		  	 turmas,
-. controle de estoque para produtos de consumo,
-. 		 							 limpeza e
+* Listagens de alunos, 
+*		  	 funcionários
+*		  	 turmas,
+* 			 controle de estoque para produtos de consumo,
+* 		 							 limpeza e
 									 material didatico
-preparação de cardapio,
+* preparação de cardapio,
 		   de declarações,
 		   de atividades, 
 
-controle de quadro estrutural,
+* controle de quadro estrutural,
 		 de entrada e saída
