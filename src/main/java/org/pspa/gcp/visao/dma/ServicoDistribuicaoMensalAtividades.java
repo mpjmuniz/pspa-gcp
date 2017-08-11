@@ -66,12 +66,12 @@ public class ServicoDistribuicaoMensalAtividades {
 			
 			// 3ª tentativa: começo da semana e do mês
 			if(mes == null){
-				mes = new AtividadeMensal(diaPrimeiro, "", agora.getYear(), agora.getMonth());
+				mes = new AtividadeMensal(diaPrimeiro, "");
 				mes.setPrimeiroDia(diaPrimeiro);
 				repositorioAM.save(mes);
 			}
 			
-			semana = new AtividadeSemanal(segunda, mes);
+			semana = new AtividadeSemanal(segunda);
 			
 			for(LocalDate diaAtual = segunda; diaAtual.isBefore(segunda.plusDays(5)); diaAtual = diaAtual.plusDays(1)){
 				

@@ -14,17 +14,17 @@ import org.pspa.gcp.modelo.enums.Instrucao;
 import org.pspa.gcp.modelo.enums.Sexo;
 import org.pspa.gcp.modelo.enums.UF;
 
-@Entity
+
 /** @author Marcelo Muniz
  * 
  * 	Entidade que representa um aluno particular da instituição
  * 
  * Versão 0.1: pronto para entrega
  * */
+@Entity
 public class Aluno implements Participante{
 
 	// Sobre o aluno
-	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer mid;
@@ -68,25 +68,25 @@ public class Aluno implements Participante{
 	// Contatos
 	private String contato_1, telefone_contato_1, contato_2, telefone_contato_2;
 
-	private String problemas_de_saude, educação_especial, atendimento_especial, frequentou_outra_instituição,
-			meio_de_transporte, tempo_de_deslocamento;
+private String problemas_de_saude, educação_especial, atendimento_especial, frequentou_outra_instituição,
+		meio_de_transporte, tempo_de_deslocamento;
 
-	// Sobre o preenchimento
-	private LocalDate data_de_preenchimento;
+// Sobre o preenchimento
+private LocalDate data_de_preenchimento;
 
-	// Responsável
-	private String responsável_pelo_preenchimento;
+// Responsável
+private String responsável_pelo_preenchimento;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "turma_id")
-	private Turma turma;
+@ManyToOne(cascade = CascadeType.ALL)
+@JoinColumn(name = "turma_id")
+private Turma turma;
 
-	public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC, String bF, String designação,
-			String nIS, Sexo sexo, LocalDate data_de_nascimento, String nacionalidade, org.pspa.gcp.modelo.enums.UF uF,
-			String religião, Boolean frequentou_EI, String pai, String rG_pai, Boolean pai_falecido,
-			Instrucao pai_instrução, Boolean pai_mora_com_aluno, String profissão_pai, String mãe, String nIS_mãe,
-			String rG_mãe, Boolean mae_falecida, Instrucao mãe_instrução, Boolean mãe_mora_com_aluno,
-			String profissão_mãe, String responsável, String tipo_responsável, String endereço_responsável,
+public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC, String bF, String designação,
+		String nIS, Sexo sexo, LocalDate data_de_nascimento, String nacionalidade, org.pspa.gcp.modelo.enums.UF uF,
+		String religião, Boolean frequentou_EI, String pai, String rG_pai, Boolean pai_falecido,
+		Instrucao pai_instrução, Boolean pai_mora_com_aluno, String profissão_pai, String mãe, String nIS_mãe,
+		String rG_mãe, Boolean mae_falecida, Instrucao mãe_instrução, Boolean mãe_mora_com_aluno,
+		String profissão_mãe, String responsável, String tipo_responsável, String endereço_responsável,
 			String cEP_responsável, String telefone_responsável, String contato_1, String telefone_contato_1,
 			String contato_2, String telefone_contato_2, String problemas_de_saude, String educação_especial,
 			String atendimento_especial, String frequentou_outra_instituição, String meio_de_transporte,
@@ -495,11 +495,13 @@ public class Aluno implements Participante{
 		this.responsável_pelo_preenchimento = responsável_pelo_preenchimento;
 	}
 
+	
 	public Turma getTurma() {
 		return turma;
 	}
 
 	public void setTurma(Turma turma) {
+		turma.getAlunos().add(this);
 		this.turma = turma;
 	}
 	

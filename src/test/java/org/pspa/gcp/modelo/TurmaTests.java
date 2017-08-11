@@ -48,7 +48,7 @@ public class TurmaTests {
 		g.setFuncao(Funcao.Auxiliar);
 		f.setFuncao(Funcao.Auxiliar);
 		
-		turma.adicionarAuxiliares(g);
+		turma.adicionarAuxiliar(g);
 		
 		turma.setFuncionario(f);
 		
@@ -63,7 +63,7 @@ public class TurmaTests {
 		g.setFuncao(Funcao.Auxiliar);
 		f.setFuncao(Funcao.Auxiliar);
 		
-		turma.adicionarAuxiliares(g);
+		turma.adicionarAuxiliar(g);
 		
 		turma.setFuncionario(f);
 		

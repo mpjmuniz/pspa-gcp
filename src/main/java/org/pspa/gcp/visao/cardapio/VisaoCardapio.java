@@ -212,7 +212,7 @@ public class VisaoCardapio extends VBox {
 	}
 
 	private void adicionar() {
-		apresentador.selecionar(Produto.class, tabela);
+		apresentador.selecionar(Produto.class, tabela, atual);
 	}
 
 	private TableColumn<Produto, String> obterColunaNome() {

@@ -2,6 +2,8 @@ package org.pspa.gcp.modelo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
@@ -30,13 +32,18 @@ public class Turma {
 	
 	private Grupamento grupamento;
 	
-	@OneToOne(mappedBy = "turma", fetch = FetchType.LAZY, optional = true)
+	@OneToOne(mappedBy = "turma", fetch = FetchType.LAZY, optional = true, targetEntity = Funcionario.class)
 	private Funcionario professor;
 	
-	@OneToMany(mappedBy = "turma", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	/**
+	 * 
+	 */
+
+	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Aluno> alunos;
-	
-	@OneToMany(mappedBy = "turma", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+
+
+	@OneToMany(mappedBy = "turma", cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Funcionario.class)
 	private List<Funcionario> auxiliares;
 	
 	public Turma(Grupamento grup) {
@@ -57,27 +64,43 @@ public class Turma {
 		this.alunos = alunos;
 	}
 
+	
 	public List<Aluno> getAlunos() {
 		return alunos;
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public void setAlunos(List alunos) {
+		
 		this.alunos = (List<Aluno>) alunos;
+		
+		ConcurrentLinkedQueue<Aluno> al = new ConcurrentLinkedQueue<>(this.alunos);
+		if(al != null){
+			al.forEach((e) -> e.setTurma(this));
+		}
 	}
 
-	public void adicionarAuxiliares(List<Funcionario> auxiliares) {
+	public void adicionarAuxiliares(Set<Funcionario> auxiliares) {
 		this.auxiliares.addAll(auxiliares);
+		
+		if(auxiliares != null){
+			for(Funcionario a : auxiliares){
+				a.setTurma(this);
+			}
+		}
 	}
 	
-	public void adicionarAuxiliares(Funcionario auxiliar) {
+	public void adicionarAuxiliar(Funcionario auxiliar) {
 		this.auxiliares.add(auxiliar);
+		
+		auxiliar.setTurma(this);
 	}
 
 	public Grupamento getGrupamento() {
 		return grupamento;
 	}
 
+	
 	public List<Funcionario> getAuxiliares(){
 		
 		return auxiliares;
@@ -94,13 +117,21 @@ public class Turma {
 	
 	// mesma coisa, adicionado para funcionar a visão turma reflexivamente
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public void setFuncionarios(List fs){
-		this.auxiliares = fs;
+	public void setFuncionarios(List fs){		
+		setAuxiliares((List<Funcionario>) fs);
 	}
 	
 	public void setAuxiliares(List<Funcionario> fs){
-		this.auxiliares = (List<Funcionario>) fs;
+		this.auxiliares = fs;
+
+		
+		if(fs != null){
+			for(Funcionario a : fs){
+				a.setTurma(this);
+			}
+		}
 	}
+	
 	
 	public Funcionario getProfessor() {
 		return professor;
@@ -121,6 +152,8 @@ public class Turma {
 		}
 		
 		this.professor = professor;
+		
+		professor.setTurma(this);
 	}
 	
 	public void setFuncionario(Funcionario f){
@@ -129,7 +162,7 @@ public class Turma {
 			setProfessor(f);
 		} else {
 			this.auxiliares.clear();
-			adicionarAuxiliares(f);
+			adicionarAuxiliar(f);
 		}
 	}
 

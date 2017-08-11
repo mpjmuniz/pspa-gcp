@@ -406,10 +406,11 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 
 
 	public void atualizar() {
+		int index = this.lElementos.getSelectionModel().getSelectedIndex();
 		this.popularVisaoInicialmente();
 		
-		T elemento = this.lElementos.getSelectionModel().getSelectedItem();
-		this.lCampos.definirObjeto(atualizarElemento(elemento));
+		this.lElementos.getSelectionModel().select(index);
+		this.lCampos.definirObjeto(atualizarElemento(lElementos.getSelectionModel().getSelectedItem()));
 	}
 
 

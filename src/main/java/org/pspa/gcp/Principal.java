@@ -3,8 +3,8 @@ package org.pspa.gcp;
 import java.io.IOException;
 
 import org.pspa.gcp.visao.Apresentador;
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.ConfigurableApplicationContext;
 
 import javafx.application.Application;
@@ -39,7 +39,14 @@ public class Principal extends Application{
 	
 	@Override
 	public void init() throws IOException{
-		contextoSpring = SpringApplication.run(Principal.class);
+		contextoSpring = springJavaFXIntegrationStart();
+	}
+	
+	private ConfigurableApplicationContext springJavaFXIntegrationStart(){
+		SpringApplicationBuilder constr = new SpringApplicationBuilder(Principal.class);
+		String[] args = getParameters().getRaw().stream().toArray(String[]::new);
+		constr.headless(false);
+		return constr.run(args);
 	}
 	
 	/** Função de entrada da aplicação, passada para a biblioteca JavaFX*/

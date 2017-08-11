@@ -53,6 +53,7 @@ public abstract class Selecao<T> extends VBox {
 	 * dependendo do valor de modo_seleção, um dos parâmetros é utilizado. 
 	 * O outro pode ser nulo, sem problemas. 
 	 * */
+	@SuppressWarnings("unchecked")
 	protected Selecao(Class<?> cls, SelectionMode mod, ApplicationContext contexto) {
 		super();
 
@@ -60,9 +61,7 @@ public abstract class Selecao<T> extends VBox {
 		
 		apresentador = Apresentador.obterInstancia();
 		
-		FabricaListas<T> fl = new FabricaListas<>(mod);
-		
-		lvCadastros = fl.construir();
+		lvCadastros = (ListView<T>) FabricaListas.construir(mod);
 		
 		definirRepositorio();
 		popularVisao();

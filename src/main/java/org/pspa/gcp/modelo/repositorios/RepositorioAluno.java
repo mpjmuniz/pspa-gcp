@@ -10,6 +10,5 @@ public interface RepositorioAluno extends JpaRepository<Aluno, Integer>{
 	
 	List<Aluno> findAlunosByNome(String nome);
 	
-	List<Aluno> findAlunosByTurma(Turma turma);
-	
+	List<Aluno> findAlunosByTurma(Turma turma);	
 }

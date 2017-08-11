@@ -13,6 +13,7 @@ import java.util.Locale.LanguageRange;
 import java.util.ResourceBundle;
 
 import org.pspa.gcp.modelo.AtividadeDiaria;
+import org.pspa.gcp.modelo.AtividadeMensal;
 import org.pspa.gcp.modelo.AtividadeSemanal;
 import org.pspa.gcp.modelo.ConteudoDidatico;
 import org.pspa.gcp.visao.Apresentador;
@@ -39,6 +40,8 @@ import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
 public class VisaoDistribuicaoMensalAtividades extends VBox{
+	
+	private AtividadeMensal atualMensal;
 	
 	private AtividadeSemanal atual;
 	
@@ -248,15 +251,15 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 
 	public void salvar(){
 		atual.setAvaliacao(taAvaliacao.getText());
-		atual.getMes().setTema(tfTemaMes.getText());
+		atualMensal.setTema(tfTemaMes.getText());
 		
 		servico.salvarAtividadeSemanal(atual);
-		servico.salvarAtividadeMensal(atual.getMes());
+		servico.salvarAtividadeMensal(atualMensal);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public void atualizar() {
-		tfTemaMes.setText(atual.getMes().getTema());
+		tfTemaMes.setText(atualMensal.getTema());
 		taAvaliacao.setText(atual.getAvaliacao());
 		
 		List<String> linguagens = new ArrayList<String>();

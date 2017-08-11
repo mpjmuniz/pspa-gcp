@@ -23,7 +23,7 @@ import org.pspa.gcp.modelo.enums.Sexo;
  * */
 @Entity
 public class Funcionario implements Participante{
-
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Integer mid;
@@ -46,8 +46,8 @@ public class Funcionario implements Participante{
 	
 	private Instrucao formacao;
 	
-	@ManyToOne(optional = true, cascade = CascadeType.ALL)
-	@OneToOne(optional = true, cascade = CascadeType.ALL)
+	@ManyToOne(optional = true, cascade = CascadeType.ALL, targetEntity = Turma.class)
+	@OneToOne(optional = true, cascade = CascadeType.ALL, mappedBy = "professor", targetEntity = Turma.class)
 	@JoinColumn(name = "turma_id")
 	private Turma turma;
 		
@@ -75,7 +75,7 @@ public class Funcionario implements Participante{
 	
 	public Funcionario() {
 		
-		this(1, "", null, null, null, null, "", "", "", null, "", "", "", new Turma());
+		this(1, "", null, null, null, null, "", "", "", null, "", "", "", null);
 	}
 
 	public Sexo getSexo() {
@@ -161,8 +161,15 @@ public class Funcionario implements Participante{
 	}
 
 	public void setTurma(Turma turma) {
+		if(Funcao.Auxiliar.equals(getFuncao())){
+			turma.adicionarAuxiliar(this);
+		} else {
+			turma.setProfessor(this);
+		}
+		
 		this.turma = turma;
 	}
+	
 	
 	public Integer getMid(){
 		return this.mid;
