@@ -167,6 +167,7 @@ public class Apresentador {
 	 * 
 	 */
 	public void descadastrarAjuda() {
+		base.disponibilizarAjuda().set("");
 		base.disponibilizarAjuda().unbind();
 	}
 

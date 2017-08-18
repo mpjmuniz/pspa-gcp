@@ -108,6 +108,8 @@ public class VisaoDistribuicaoMensalAtividades extends VBox{
 		ajuda = new SimpleStringProperty("");
 		apresentador.cadastrarAjuda(ajuda);
 		
+		atualMensal = servico.obterMesAtual();
+		
 		atual = servico.obterSemanaAtual();
 		
 		atualizar();

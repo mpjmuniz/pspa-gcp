@@ -17,9 +17,9 @@ import org.pspa.gcp.modelo.enums.UF;
 
 /** @author Marcelo Muniz
  * 
- * 	Entidade que representa um aluno particular da instituição
+ * 	Entidade que representa um aluno particular da instituicao
  * 
- * Versão 0.1: pronto para entrega
+ * Versao 0.1: pronto para entrega
  * */
 @Entity
 public class Aluno implements Participante{
@@ -35,7 +35,7 @@ public class Aluno implements Participante{
 
 	private Integer ID;
 
-	private String CFC, BF, designação, NIS;
+	private String CFC, BF, designacao, NIS;
 
 	private Sexo sexo;
 
@@ -43,54 +43,54 @@ public class Aluno implements Participante{
 	private String nacionalidade;
 
 	private UF UF;
-	private String religião;
+	private String religiao;
 	private Boolean frequentou_EI;
 
 	// Sobre o pai
 	private String pai, RG_pai;
 	private Boolean pai_falecido;
 
-	private Instrucao pai_instrução;
+	private Instrucao pai_instrucao;
 	private Boolean pai_mora_com_aluno;
-	private String profissão_pai;
+	private String profissao_pai;
 
-	// Sobre a mãe
-	private String mãe, NIS_mãe, RG_mãe;
+	// Sobre a mae
+	private String mae, NIS_mae, RG_mae;
 	private Boolean mae_falecida;
 
-	private Instrucao mãe_instrução;
-	private Boolean mãe_mora_com_aluno;
-	private String profissão_mãe;
+	private Instrucao mae_instrucao;
+	private Boolean mae_mora_com_aluno;
+	private String profissao_mae;
 
-	// Sobre o responsável
-	private String responsável, tipo_responsável, endereço_responsável, CEP_responsável, telefone_responsável;
+	// Sobre o responsavel
+	private String responsavel, tipo_responsavel, endereco_responsavel, CEP_responsavel, telefone_responsavel;
 
 	// Contatos
 	private String contato_1, telefone_contato_1, contato_2, telefone_contato_2;
 
-private String problemas_de_saude, educação_especial, atendimento_especial, frequentou_outra_instituição,
+private String problemas_de_saude, educacao_especial, atendimento_especial, frequentou_outra_instituicao,
 		meio_de_transporte, tempo_de_deslocamento;
 
 // Sobre o preenchimento
 private LocalDate data_de_preenchimento;
 
-// Responsável
-private String responsável_pelo_preenchimento;
+// Responsavel
+private String responsavel_pelo_preenchimento;
 
 @ManyToOne(cascade = CascadeType.ALL)
 @JoinColumn(name = "turma_id")
 private Turma turma;
 
-public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC, String bF, String designação,
+public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC, String bF, String designacao,
 		String nIS, Sexo sexo, LocalDate data_de_nascimento, String nacionalidade, org.pspa.gcp.modelo.enums.UF uF,
-		String religião, Boolean frequentou_EI, String pai, String rG_pai, Boolean pai_falecido,
-		Instrucao pai_instrução, Boolean pai_mora_com_aluno, String profissão_pai, String mãe, String nIS_mãe,
-		String rG_mãe, Boolean mae_falecida, Instrucao mãe_instrução, Boolean mãe_mora_com_aluno,
-		String profissão_mãe, String responsável, String tipo_responsável, String endereço_responsável,
-			String cEP_responsável, String telefone_responsável, String contato_1, String telefone_contato_1,
-			String contato_2, String telefone_contato_2, String problemas_de_saude, String educação_especial,
-			String atendimento_especial, String frequentou_outra_instituição, String meio_de_transporte,
-			String tempo_de_deslocamento, LocalDate data_de_preenchimento, String responsável_pelo_preenchimento,
+		String religiao, Boolean frequentou_EI, String pai, String rG_pai, Boolean pai_falecido,
+		Instrucao pai_instrucao, Boolean pai_mora_com_aluno, String profissao_pai, String mae, String nIS_mae,
+		String rG_mae, Boolean mae_falecida, Instrucao mae_instrucao, Boolean mae_mora_com_aluno,
+		String profissao_mae, String responsavel, String tipo_responsavel, String endereco_responsavel,
+			String cEP_responsavel, String telefone_responsavel, String contato_1, String telefone_contato_1,
+			String contato_2, String telefone_contato_2, String problemas_de_saude, String educacao_especial,
+			String atendimento_especial, String frequentou_outra_instituicao, String meio_de_transporte,
+			String tempo_de_deslocamento, LocalDate data_de_preenchimento, String responsavel_pelo_preenchimento,
 			Turma turma) {
 		super();
 		this.mid = mid;
@@ -100,44 +100,44 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 		ID = iD;
 		CFC = cFC;
 		BF = bF;
-		this.designação = designação;
+		this.designacao = designacao;
 		NIS = nIS;
 		this.sexo = sexo;
 		this.data_de_nascimento = data_de_nascimento;
 		this.nacionalidade = nacionalidade;
 		UF = uF;
-		this.religião = religião;
+		this.religiao = religiao;
 		this.frequentou_EI = frequentou_EI;
 		this.pai = pai;
 		RG_pai = rG_pai;
 		this.pai_falecido = pai_falecido;
-		this.pai_instrução = pai_instrução;
+		this.pai_instrucao = pai_instrucao;
 		this.pai_mora_com_aluno = pai_mora_com_aluno;
-		this.profissão_pai = profissão_pai;
-		this.mãe = mãe;
-		NIS_mãe = nIS_mãe;
-		RG_mãe = rG_mãe;
+		this.profissao_pai = profissao_pai;
+		this.mae = mae;
+		NIS_mae = nIS_mae;
+		RG_mae = rG_mae;
 		this.mae_falecida = mae_falecida;
-		this.mãe_instrução = mãe_instrução;
-		this.mãe_mora_com_aluno = mãe_mora_com_aluno;
-		this.profissão_mãe = profissão_mãe;
-		this.responsável = responsável;
-		this.tipo_responsável = tipo_responsável;
-		this.endereço_responsável = endereço_responsável;
-		CEP_responsável = cEP_responsável;
-		this.telefone_responsável = telefone_responsável;
+		this.mae_instrucao = mae_instrucao;
+		this.mae_mora_com_aluno = mae_mora_com_aluno;
+		this.profissao_mae = profissao_mae;
+		this.responsavel = responsavel;
+		this.tipo_responsavel = tipo_responsavel;
+		this.endereco_responsavel = endereco_responsavel;
+		CEP_responsavel = cEP_responsavel;
+		this.telefone_responsavel = telefone_responsavel;
 		this.contato_1 = contato_1;
 		this.telefone_contato_1 = telefone_contato_1;
 		this.contato_2 = contato_2;
 		this.telefone_contato_2 = telefone_contato_2;
 		this.problemas_de_saude = problemas_de_saude;
-		this.educação_especial = educação_especial;
+		this.educacao_especial = educacao_especial;
 		this.atendimento_especial = atendimento_especial;
-		this.frequentou_outra_instituição = frequentou_outra_instituição;
+		this.frequentou_outra_instituicao = frequentou_outra_instituicao;
 		this.meio_de_transporte = meio_de_transporte;
 		this.tempo_de_deslocamento = tempo_de_deslocamento;
 		this.data_de_preenchimento = data_de_preenchimento;
-		this.responsável_pelo_preenchimento = responsável_pelo_preenchimento;
+		this.responsavel_pelo_preenchimento = responsavel_pelo_preenchimento;
 		this.turma = turma;
 	}
 
@@ -191,12 +191,12 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 		BF = bF;
 	}
 
-	public String getDesignação() {
-		return designação;
+	public String getDesignacao() {
+		return designacao;
 	}
 
-	public void setDesignação(String designação) {
-		this.designação = designação;
+	public void setDesignacao(String designacao) {
+		this.designacao = designacao;
 	}
 
 	public String getNIS() {
@@ -239,12 +239,12 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 		UF = uF;
 	}
 
-	public String getReligião() {
-		return religião;
+	public String getReligiao() {
+		return religiao;
 	}
 
-	public void setReligião(String religião) {
-		this.religião = religião;
+	public void setReligiao(String religiao) {
+		this.religiao = religiao;
 	}
 
 	public Boolean getFrequentou_EI() {
@@ -279,12 +279,12 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 		this.pai_falecido = pai_falecido;
 	}
 
-	public Instrucao getPai_instrução() {
-		return pai_instrução;
+	public Instrucao getPai_instrucao() {
+		return pai_instrucao;
 	}
 
-	public void setPai_instrução(Instrucao pai_instrução) {
-		this.pai_instrução = pai_instrução;
+	public void setPai_instrucao(Instrucao pai_instrucao) {
+		this.pai_instrucao = pai_instrucao;
 	}
 
 	public Boolean getPai_mora_com_aluno() {
@@ -295,36 +295,36 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 		this.pai_mora_com_aluno = pai_mora_com_aluno;
 	}
 
-	public String getProfissão_pai() {
-		return profissão_pai;
+	public String getProfissao_pai() {
+		return profissao_pai;
 	}
 
-	public void setProfissão_pai(String profissão_pai) {
-		this.profissão_pai = profissão_pai;
+	public void setProfissao_pai(String profissao_pai) {
+		this.profissao_pai = profissao_pai;
 	}
 
-	public String getMãe() {
-		return mãe;
+	public String getMae() {
+		return mae;
 	}
 
-	public void setMãe(String mãe) {
-		this.mãe = mãe;
+	public void setMae(String mae) {
+		this.mae = mae;
 	}
 
-	public String getNIS_mãe() {
-		return NIS_mãe;
+	public String getNIS_mae() {
+		return NIS_mae;
 	}
 
-	public void setNIS_mãe(String nIS_mãe) {
-		NIS_mãe = nIS_mãe;
+	public void setNIS_mae(String nIS_mae) {
+		NIS_mae = nIS_mae;
 	}
 
-	public String getRG_mãe() {
-		return RG_mãe;
+	public String getRG_mae() {
+		return RG_mae;
 	}
 
-	public void setRG_mãe(String rG_mãe) {
-		RG_mãe = rG_mãe;
+	public void setRG_mae(String rG_mae) {
+		RG_mae = rG_mae;
 	}
 
 	public Boolean getMae_falecida() {
@@ -335,68 +335,68 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 		this.mae_falecida = mae_falecida;
 	}
 
-	public Instrucao getMãe_instrução() {
-		return mãe_instrução;
+	public Instrucao getMae_instrucao() {
+		return mae_instrucao;
 	}
 
-	public void setMãe_instrução(Instrucao mãe_instrução) {
-		this.mãe_instrução = mãe_instrução;
+	public void setMae_instrucao(Instrucao mae_instrucao) {
+		this.mae_instrucao = mae_instrucao;
 	}
 
-	public Boolean getMãe_mora_com_aluno() {
-		return mãe_mora_com_aluno;
+	public Boolean getMae_mora_com_aluno() {
+		return mae_mora_com_aluno;
 	}
 
-	public void setMãe_mora_com_aluno(Boolean mãe_mora_com_aluno) {
-		this.mãe_mora_com_aluno = mãe_mora_com_aluno;
+	public void setMae_mora_com_aluno(Boolean mae_mora_com_aluno) {
+		this.mae_mora_com_aluno = mae_mora_com_aluno;
 	}
 
-	public String getProfissão_mãe() {
-		return profissão_mãe;
+	public String getProfissao_mae() {
+		return profissao_mae;
 	}
 
-	public void setProfissão_mãe(String profissão_mãe) {
-		this.profissão_mãe = profissão_mãe;
+	public void setProfissao_mae(String profissao_mae) {
+		this.profissao_mae = profissao_mae;
 	}
 
-	public String getResponsável() {
-		return responsável;
+	public String getResponsavel() {
+		return responsavel;
 	}
 
-	public void setResponsável(String responsável) {
-		this.responsável = responsável;
+	public void setResponsavel(String responsavel) {
+		this.responsavel = responsavel;
 	}
 
-	public String getTipo_responsável() {
-		return tipo_responsável;
+	public String getTipo_responsavel() {
+		return tipo_responsavel;
 	}
 
-	public void setTipo_responsável(String tipo_responsável) {
-		this.tipo_responsável = tipo_responsável;
+	public void setTipo_responsavel(String tipo_responsavel) {
+		this.tipo_responsavel = tipo_responsavel;
 	}
 
-	public String getEndereço_responsável() {
-		return endereço_responsável;
+	public String getEndereco_responsavel() {
+		return endereco_responsavel;
 	}
 
-	public void setEndereço_responsável(String endereço_responsável) {
-		this.endereço_responsável = endereço_responsável;
+	public void setEndereco_responsavel(String endereco_responsavel) {
+		this.endereco_responsavel = endereco_responsavel;
 	}
 
-	public String getCEP_responsável() {
-		return CEP_responsável;
+	public String getCEP_responsavel() {
+		return CEP_responsavel;
 	}
 
-	public void setCEP_responsável(String cEP_responsável) {
-		CEP_responsável = cEP_responsável;
+	public void setCEP_responsavel(String cEP_responsavel) {
+		CEP_responsavel = cEP_responsavel;
 	}
 
-	public String getTelefone_responsável() {
-		return telefone_responsável;
+	public String getTelefone_responsavel() {
+		return telefone_responsavel;
 	}
 
-	public void setTelefone_responsável(String telefone_responsável) {
-		this.telefone_responsável = telefone_responsável;
+	public void setTelefone_responsavel(String telefone_responsavel) {
+		this.telefone_responsavel = telefone_responsavel;
 	}
 
 	public String getContato_1() {
@@ -439,12 +439,12 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 		this.problemas_de_saude = problemas_de_saude;
 	}
 
-	public String getEducação_especial() {
-		return educação_especial;
+	public String getEducacao_especial() {
+		return educacao_especial;
 	}
 
-	public void setEducação_especial(String educação_especial) {
-		this.educação_especial = educação_especial;
+	public void setEducacao_especial(String educacao_especial) {
+		this.educacao_especial = educacao_especial;
 	}
 
 	public String getAtendimento_especial() {
@@ -455,12 +455,12 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 		this.atendimento_especial = atendimento_especial;
 	}
 
-	public String getFrequentou_outra_instituição() {
-		return frequentou_outra_instituição;
+	public String getFrequentou_outra_instituicao() {
+		return frequentou_outra_instituicao;
 	}
 
-	public void setFrequentou_outra_instituição(String frequentou_outra_instituição) {
-		this.frequentou_outra_instituição = frequentou_outra_instituição;
+	public void setFrequentou_outra_instituicao(String frequentou_outra_instituicao) {
+		this.frequentou_outra_instituicao = frequentou_outra_instituicao;
 	}
 
 	public String getMeio_de_transporte() {
@@ -487,12 +487,12 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 		this.data_de_preenchimento = data_de_preenchimento;
 	}
 
-	public String getResponsável_pelo_preenchimento() {
-		return responsável_pelo_preenchimento;
+	public String getResponsavel_pelo_preenchimento() {
+		return responsavel_pelo_preenchimento;
 	}
 
-	public void setResponsável_pelo_preenchimento(String responsável_pelo_preenchimento) {
-		this.responsável_pelo_preenchimento = responsável_pelo_preenchimento;
+	public void setResponsavel_pelo_preenchimento(String responsavel_pelo_preenchimento) {
+		this.responsavel_pelo_preenchimento = responsavel_pelo_preenchimento;
 	}
 
 	
@@ -501,7 +501,7 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 	}
 
 	public void setTurma(Turma turma) {
-		turma.getAlunos().add(this);
+		if(turma != null) turma.getAlunos().add(this);
 		this.turma = turma;
 	}
 	
@@ -523,5 +523,11 @@ public Aluno(Integer mid, String nome, String ano_letivo, Integer iD, String cFC
 	
 	public String toString(){
 		return this.nome;
+	}
+	
+	public boolean equals(Object other) {
+		if(other == null) return false;
+		
+		return ((Aluno) other).getMid() == this.getMid();
 	}
 }

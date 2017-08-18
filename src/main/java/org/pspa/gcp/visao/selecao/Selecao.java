@@ -5,6 +5,7 @@ import org.pspa.gcp.visao.Lista.FabricaListas;
 import org.springframework.context.ApplicationContext;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -24,7 +25,7 @@ import javafx.stage.Stage;
  *  @version 0.1
  * */
 
-@Component
+
 public abstract class Selecao<T> extends VBox {
 	
 	/** ajuda à ligar janela da seleção à janela principal*/

@@ -161,13 +161,11 @@ public class Funcionario implements Participante{
 	}
 
 	public void setTurma(Turma turma) {
-		if(Funcao.Auxiliar.equals(getFuncao())){
-			turma.adicionarAuxiliar(this);
-		} else {
-			turma.setProfessor(this);
-		}
-		
 		this.turma = turma;
+		
+		if(turma != null) {
+			turma.setFuncionario(this);
+		}
 	}
 	
 	
@@ -209,5 +207,11 @@ public class Funcionario implements Participante{
 
 	public void setFormacao(Instrucao formacao) {
 		this.formacao = formacao;
+	}
+	
+	public boolean equals(Object other) {
+		if(other == null) return false;
+		
+		return ((Funcionario) other).getMid() == this.getMid();
 	}
 }

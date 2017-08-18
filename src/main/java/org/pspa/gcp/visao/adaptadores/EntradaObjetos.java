@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.pspa.gcp.visao.Apresentador;
+import org.springframework.stereotype.Component;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;

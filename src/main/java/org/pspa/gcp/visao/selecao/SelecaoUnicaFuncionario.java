@@ -3,9 +3,11 @@ package org.pspa.gcp.visao.selecao;
 import org.pspa.gcp.modelo.Funcionario;
 import org.pspa.gcp.modelo.Turma;
 import org.pspa.gcp.modelo.repositorios.RepositorioFuncionario;
+import org.pspa.gcp.visao.Apresentador;
 import org.pspa.gcp.visao.adaptadores.EntradaObjetos;
 import org.springframework.context.ApplicationContext;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.scene.control.SelectionMode;
 
 public class SelecaoUnicaFuncionario extends Selecao<Funcionario> {
@@ -53,6 +55,8 @@ public class SelecaoUnicaFuncionario extends Selecao<Funcionario> {
 			throw new RuntimeException("campo auxiliar não declarado");
 		}
 		
+		try {
+		
 		if(selecao != null) {
 			campoAuxiliar.getTfElemento().setText(selecao.toString());
 			
@@ -60,6 +64,18 @@ public class SelecaoUnicaFuncionario extends Selecao<Funcionario> {
 		} else {
 			campoAuxiliar.getTfElemento().setText("Nenhum(a)");
 		}
+		
+		} catch(Exception e) {
+			
+			Apresentador ap = Apresentador.obterInstancia();
+			
+			ap.cadastrarAjuda(new SimpleStringProperty(e.getMessage()));
+			
+			ap.descadastrarAjuda();
+			
+			campoAuxiliar.getTfElemento().setText("Nenhum(a)");
+		}
+		
 		
 		sSobreposto.close();
 	}

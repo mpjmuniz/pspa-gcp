@@ -3,10 +3,15 @@ package org.pspa.gcp.visao.selecao;
 import org.pspa.gcp.modelo.Participante;
 import org.pspa.gcp.modelo.Turma;
 import org.pspa.gcp.modelo.repositorios.RepositorioTurma;
+import org.pspa.gcp.visao.Apresentador;
 import org.pspa.gcp.visao.adaptadores.EntradaObjetos;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javafx.scene.control.SelectionMode;
+import javafx.beans.property.SimpleStringProperty;
 
 public class SelecaoUnicaTurma extends Selecao<Turma> {
 
@@ -54,6 +59,8 @@ public class SelecaoUnicaTurma extends Selecao<Turma> {
 			throw new RuntimeException("campo auxiliar não declarado");
 		}
 		
+		try {
+		
 		if(selecao != null) {
 			campoAuxiliar.getTfElemento().setText(selecao.toString());
 			
@@ -62,7 +69,20 @@ public class SelecaoUnicaTurma extends Selecao<Turma> {
 			campoAuxiliar.getTfElemento().setText("Nenhum(a)");
 		}
 		
-		sSobreposto.close();
+		} catch(IllegalArgumentException e) {
+			Apresentador ap = Apresentador.obterInstancia();
+			
+			ap.cadastrarAjuda(new SimpleStringProperty(e.getMessage()));
+			
+			ap.descadastrarAjuda();
+			
+			campoAuxiliar.getTfElemento().setText("Nenhum(a)");
+			
+		} finally {
+			sSobreposto.close();
+		}
+		
+		
 	}
 	
 	// TODO: pensar num modo de passar turma para objeto (funcionário ou aluno)

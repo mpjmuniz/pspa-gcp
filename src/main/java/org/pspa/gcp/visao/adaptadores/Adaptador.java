@@ -1,7 +1,10 @@
 package org.pspa.gcp.visao.adaptadores;
 
+import org.springframework.stereotype.Component;
+
 import javafx.collections.ObservableMap;
 
+@Component
 public interface Adaptador<T>{
 	public T obterValor();
 	

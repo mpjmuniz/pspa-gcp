@@ -32,7 +32,7 @@ public class Turma {
 	
 	private Grupamento grupamento;
 	
-	@OneToOne(mappedBy = "turma", fetch = FetchType.LAZY, optional = true, targetEntity = Funcionario.class)
+	@OneToOne(mappedBy = "turma", fetch = FetchType.LAZY, optional = true, targetEntity = Funcionario.class, cascade = CascadeType.ALL)
 	private Funcionario professor;
 	
 	/**
@@ -74,8 +74,8 @@ public class Turma {
 		
 		this.alunos = (List<Aluno>) alunos;
 		
-		ConcurrentLinkedQueue<Aluno> al = new ConcurrentLinkedQueue<>(this.alunos);
-		if(al != null){
+		if(alunos != null){
+			ConcurrentLinkedQueue<Aluno> al = new ConcurrentLinkedQueue<>(this.alunos);
 			al.forEach((e) -> e.setTurma(this));
 		}
 	}
@@ -93,7 +93,9 @@ public class Turma {
 	public void adicionarAuxiliar(Funcionario auxiliar) {
 		this.auxiliares.add(auxiliar);
 		
-		auxiliar.setTurma(this);
+		if(!auxiliares.contains(auxiliar)) {
+			auxiliar.setTurma(this);
+		}
 	}
 
 	public Grupamento getGrupamento() {
@@ -148,17 +150,20 @@ public class Turma {
 	public void setProfessor(Funcionario professor) {
 			
 		if(professor != null && professor.getFuncao() != Funcao.Professor){
-			throw new IllegalArgumentException("O Funcionário precisa ter a função \"professor\" definida para ser posto como professor.");
+			throw new IllegalArgumentException("O Funcionario precisa ter a funcao \"professor\" definida para ser posto como professor.");
 		}
 		
 		this.professor = professor;
 		
-		professor.setTurma(this);
+		if(professor != null && !this.equals(professor.getTurma())) {
+			professor.setTurma(this);
+		}
 	}
 	
 	public void setFuncionario(Funcionario f){
 		if(f == null) return;
-		if(f.getFuncao().equals(Funcao.Professor)){
+		
+		if(Funcao.Professor.equals(f.getFuncao())){
 			setProfessor(f);
 		} else {
 			this.auxiliares.clear();
@@ -181,5 +186,11 @@ public class Turma {
 	
 	public void setNome(String nome){
 		return;
+	}
+	
+	public boolean equals(Object other) {
+		if(other == null) return false;
+		
+		return ((Turma) other).getMid() == this.getMid();
 	}
 }

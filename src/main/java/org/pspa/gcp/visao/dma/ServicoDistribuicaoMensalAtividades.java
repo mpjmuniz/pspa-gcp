@@ -4,6 +4,7 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+import org.hibernate.Hibernate;
 import org.pspa.gcp.modelo.AtividadeDiaria;
 import org.pspa.gcp.modelo.AtividadeMensal;
 import org.pspa.gcp.modelo.AtividadeSemanal;
@@ -14,6 +15,7 @@ import org.pspa.gcp.modelo.repositorios.RepositorioAtividadeSemanal;
 import org.pspa.gcp.modelo.repositorios.RepositorioConteudoDidatico;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /*
  * TODO: refazer lógica de organização das atividades mensais, diárias e semanais
@@ -47,6 +49,7 @@ public class ServicoDistribuicaoMensalAtividades {
 		this.repositorioAM = repositorioAM;
 	}
 
+	@Transactional
 	public AtividadeSemanal obterSemanaAtual() {
 		
 		AtividadeSemanal semana;
@@ -64,53 +67,49 @@ public class ServicoDistribuicaoMensalAtividades {
 			
 			mes = repositorioAM.findOne(diaPrimeiro);
 			
-			// 3ª tentativa: começo da semana e do mês
+			/* 3ª tentativa: começo da semana e do mês
 			if(mes == null){
-				mes = new AtividadeMensal(diaPrimeiro, "");
-				mes.setPrimeiroDia(diaPrimeiro);
-				repositorioAM.save(mes);
-			}
+				mes = repositorioAM.save(new AtividadeMensal(diaPrimeiro, ""));
+			}*/
 			
 			semana = new AtividadeSemanal(segunda);
 			
 			for(LocalDate diaAtual = segunda; diaAtual.isBefore(segunda.plusDays(5)); diaAtual = diaAtual.plusDays(1)){
 				
-				dia = new AtividadeDiaria(diaAtual, new ArrayList<>());
-				
-				repositorioAD.save(dia);
+				dia = repositorioAD.save(new AtividadeDiaria(diaAtual, new ArrayList<>()));
 				
 				semana.getDias().add(dia);
 			}
 			
-			repositorioAS.save(semana);
+			semana = repositorioAS.save(semana);
 			
 			mes.getSemanas().add(semana);
 			
-			repositorioAM.save(mes);
+			mes = repositorioAM.save(mes);
 		}
 		
 		return semana;
 	}
 
-	public void salvarAtividadeSemanal(AtividadeSemanal atual) {
-		repositorioAS.save(atual);
+	public AtividadeSemanal salvarAtividadeSemanal(AtividadeSemanal atual) {
+		return repositorioAS.save(atual);
 	}
 
-	public void salvarAtividadeMensal(AtividadeMensal mes) {
-		repositorioAM.save(mes);
+	public AtividadeMensal salvarAtividadeMensal(AtividadeMensal mes) {
+		return repositorioAM.save(mes);
 	}
 
-	public void salvarConteudo(AtividadeSemanal atual, AtividadeDiaria ad, ConteudoDidatico p) {
-		repositorioCD.save(p);
+	public AtividadeSemanal salvarConteudo(AtividadeSemanal atual, AtividadeDiaria ad, ConteudoDidatico p) {
+		ConteudoDidatico q = repositorioCD.save(p);
 		
-		ad.getConteudos().add(p);
+		ad.getConteudos().add(q);
 		repositorioAD.save(ad);
 		
-		repositorioAS.save(atual);
+		return repositorioAS.save(atual);
 	}
 	
-	public void salvarConteudo(ConteudoDidatico cd){
-		repositorioCD.save(cd);
+	public ConteudoDidatico salvarConteudo(ConteudoDidatico cd){
+		return repositorioCD.save(cd);
 	}
 	
 	public LocalDate obterSegunda(LocalDate data){
@@ -142,5 +141,22 @@ public class ServicoDistribuicaoMensalAtividades {
 		repositorioAD.save(atividadeDiaria);
 		repositorioCD.delete(p);
 		
+	}
+
+	public AtividadeMensal obterMesAtual() {
+		
+		LocalDate agora = LocalDate.now(),
+				  diaPrimeiro = obterDiaPrimeiro(agora);
+		
+		AtividadeMensal mes;
+		
+		mes = repositorioAM.findOne(diaPrimeiro);
+		
+		// come�o do m�s
+		if(mes == null){
+			mes = repositorioAM.save(new AtividadeMensal(diaPrimeiro, ""));
+		}
+		
+		return mes;
 	}
 }

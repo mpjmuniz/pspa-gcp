@@ -2,8 +2,10 @@ package org.pspa.gcp.visao;
 
 import java.lang.reflect.InvocationTargetException;
 
+import org.pspa.gcp.modelo.Funcionario;
 import org.pspa.gcp.visao.Lista.ListaElementos;
 import org.pspa.gcp.visao.Lista.ListaSelecaoUnica;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,6 +55,8 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 	
 	protected VBox vbListagem;
 	
+	protected JpaRepository<T, Integer> repositorio;
+	
 	/**
 	 * Construtor único
 	 * 
@@ -70,11 +74,13 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 
 		ScrollPane sp = new ScrollPane(lCampos);
 		sp.setPadding(new Insets(20));
+		sp.setId("spCampos");
 
 		// Definição da lista de cadastros
 
 		this.lElementos = new ListaSelecaoUnica<T>();
 		lElementos.getSelectionModel().selectedItemProperty().addListener(this::mudancaNaSelecao);
+		lElementos.setId("lElementos");
 		lElementos.setOnMouseClicked(e -> atualizar());
 		// Botões de controle
 		bNovo = new Button("Criar Novo");
@@ -186,7 +192,9 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 	}
 	
 	public void cadastrar(T objeto){
-		this.persistir(objeto);
+		T obj = this.persistir(objeto);
+		lElementos.getItems().set(lElementos.getItems().indexOf(objeto), obj);
+		
 		lElementos.refresh();
 		lCampos.definirObjeto(null);
 		salvo();
@@ -295,10 +303,17 @@ public abstract class VisaoCadastros<T> extends SplitPane {
 	
 	/** método de listagem da visão com cadastros no banco */
 	@Transactional
-	public abstract void popularVisaoInicialmente();
+	public void popularVisaoInicialmente(){
+		this.lElementos.getItems().clear();
+		this.lElementos.getItems().addAll(repositorio.findAll());
+	}
 
 	@Transactional
-	public abstract T persistir(T objeto);
+	public T persistir(T objeto) {
+		if(objeto == null) return null;
+		
+		return repositorio.save(objeto);
+	}
 	
 	@Transactional
 	public abstract void deletar(T objeto);

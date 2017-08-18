@@ -102,8 +102,8 @@ public class VisaoCardapio extends VBox {
 		HBox hbNumCriancas = new HBox(10),
 			 hbNumFuncionarios = new HBox(10);
 		
-		lNumCriancas = new Label("Número de Crianças: ");
-		lNumFuncionarios = new Label("Número de Funcionarios: ");
+		lNumCriancas = new Label("Numero de Criancas: ");
+		lNumFuncionarios = new Label("Numero de Funcionarios: ");
 		
 		eiNumCriancas = new EntradaInteiros();
 		

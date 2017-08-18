@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pspa.gcp.modelo.Aluno;
-import org.pspa.gcp.modelo.Turma;
 import org.pspa.gcp.modelo.enums.Instrucao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -85,7 +84,7 @@ public class TesteRepositorioAluno {
 	}
 	
 	@Test
-	public void testarAtualizaçãoAlunos(){
+	public void testarAtualizacaoAlunos(){
 		a = repositorio.save(a);
 		Integer id = a.getMid();
 		
@@ -100,13 +99,13 @@ public class TesteRepositorioAluno {
 	}
 	
 	@Test
-	public void testarDeleçãoAlunos(){
+	public void testarDelecaoAlunos(){
 		repositorio.deleteAll();
 		assertThat(repositorio.count(), is(0L));
 	}
 	
 	@Test
-	public void testarAlteraçãoInts(){
+	public void testarAlteracaoInts(){
 		
 		a = repositorio.save(a);
 		
@@ -122,23 +121,23 @@ public class TesteRepositorioAluno {
 	}
 	
 	@Test
-	public void testarAlteraçãoEnums(){
+	public void testarAlteracaoEnums(){
 		
 		a = repositorio.save(a);
 		
 		Aluno al = repositorio.findOne(a.getMid());
 		
-		al.setPai_instrução(Instrucao.Superior_Completo);
+		al.setPai_instrucao(Instrucao.Superior_Completo);
 		
 		al = repositorio.save(al);
 		
 		Aluno b = repositorio.findOne(al.getMid());
 		
-		assertThat(b.getPai_instrução(), is(Instrucao.Superior_Completo));
+		assertThat(b.getPai_instrucao(), is(Instrucao.Superior_Completo));
 	}
 	
 	@Test
-	public void testarAlteraçãoBooleans(){
+	public void testarAlteracaoBooleans(){
 		
 		a = repositorio.save(a);
 		
@@ -154,7 +153,7 @@ public class TesteRepositorioAluno {
 	}
 	
 	@Test
-	public void testarAlteraçãoDatas(){
+	public void testarAlteracaoDatas(){
 		
 		a = repositorio.save(a);
 		

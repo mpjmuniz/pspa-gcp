@@ -43,7 +43,7 @@
 				</Menu>
 				<Menu fx:id="mRefeicao" mnemonicParsing="false" text="Estoques">
 					<items>
-						<MenuItem fx:id="mCardapio" mnemonicParsing="false" text="Cardápio">
+						<MenuItem fx:id="mCardapio" mnemonicParsing="false" text="Cardapio">
 							<accelerator>
 								<KeyCodeCombination alt="DOWN" code="C"
 									control="UP" meta="UP" shift="UP" shortcut="UP" />

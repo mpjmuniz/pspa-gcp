@@ -57,7 +57,7 @@ public class TesteRepositorioFuncionario {
 	}
 	
 	@Test
-	public void testarAtualizaçãoFuncionarios(){
+	public void testarAtualizacaoFuncionarios(){
 		Funcionario fn = new Funcionario();
 		fn = repositorio.save(fn);
 		Integer id = fn.getMid();
@@ -73,7 +73,7 @@ public class TesteRepositorioFuncionario {
 	}
 	
 	@Test
-	public void testarDeleçãoFuncionarios(){
+	public void testarDelecaoFuncionarios(){
 		repositorio.deleteAll();
 		assertThat(repositorio.count(), is(0L));
 	}

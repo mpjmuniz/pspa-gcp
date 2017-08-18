@@ -10,8 +10,6 @@ import org.springframework.context.ApplicationContext;
 import javafx.scene.control.Button;
 
 public class VisaoTurmas extends VisaoCadastros<Turma>{
-
-	RepositorioTurma repositorio;
 	
 	ApplicationContext contexto;
 	
@@ -64,23 +62,7 @@ public class VisaoTurmas extends VisaoCadastros<Turma>{
 		@SuppressWarnings("unused")
 		ListagemAlunos list = new ListagemAlunos(contexto, lElementos.getSelectionModel().getSelectedItem());
 	}
-
-	@Override
-	public void popularVisaoInicialmente(){
-		this.lElementos.getItems().clear();
-		this.lElementos.getItems().addAll(repositorio.findAll());
-	}
-
-	@Override
-	public Turma persistir(Turma objeto) {
-		if(objeto == null) return null;
-		
-		Turma obj = repositorio.findOne(objeto.getMid());
-		if(obj != null) return repositorio.save(obj);
-		
-		return repositorio.save(objeto);
-	}
-
+	
 	@Override
 	public void deletar(Turma objeto) {
 		if(objeto == null) return;

@@ -11,6 +11,7 @@ import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 
+import org.hibernate.Hibernate;
 import org.pspa.gcp.modelo.enums.Enumeracao;
 import org.pspa.gcp.visao.adaptadores.Adaptador;
 import org.pspa.gcp.visao.adaptadores.EntradaBooleanos;
@@ -62,6 +63,8 @@ public class ListagemCampos<T> extends GridPane {
 		// this.setGridLinesVisible(true);
 		this.setHgap(10);
 		this.setVgap(10);
+		
+		this.setId("listagemCampos");
 
 		this.descobrirCampos(cls);
 	}
@@ -284,7 +287,9 @@ public class ListagemCampos<T> extends GridPane {
 				}
 				
 				getter = this.classe.getMethod("get" + nome);
+				
 				valor = getter.invoke(objeto);
+				
 				campo.definirValor(valor);
 
 			}

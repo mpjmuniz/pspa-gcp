@@ -8,8 +8,6 @@ import org.springframework.context.ApplicationContext;
 import javafx.scene.control.Button;
 
 public class VisaoInscritos extends VisaoCadastros<Inscrito>{
-
-	RepositorioInscrito repositorio;
 	
 	protected VisaoInscritos(ApplicationContext contexto) {
 		super(Inscrito.class);
@@ -20,22 +18,6 @@ public class VisaoInscritos extends VisaoCadastros<Inscrito>{
 		vbListagem.getChildren().add(bInscrever);
 		
 		repositorio = contexto.getBean(RepositorioInscrito.class);
-	}
-	
-	@Override
-	public void popularVisaoInicialmente(){
-		this.lElementos.getItems().clear();
-		this.lElementos.getItems().addAll(repositorio.findAll());
-	}
-
-	@Override
-	public Inscrito persistir(Inscrito objeto) {
-		if(objeto == null) return null;
-		
-		Inscrito obj = repositorio.findOne(objeto.getMid());
-		if(obj != null) return obj;
-		
-		return repositorio.save(objeto);
 	}
 
 	@Override
@@ -50,7 +32,7 @@ public class VisaoInscritos extends VisaoCadastros<Inscrito>{
 		
 		if(lElementos.getSelectionModel().isEmpty()){
 			
-			ajuda.set("Não há nenhuma inscrição selecionada. Criarei o objeto descrito.");
+			ajuda.set("Na�o ha nenhuma inscricao selecionada. Criarei o objeto descrito.");
 			
 			if(lCampos.dadosEstaoValidos()){
 				lCampos.construirObjeto();
@@ -59,7 +41,7 @@ public class VisaoInscritos extends VisaoCadastros<Inscrito>{
 			
 				lCampos.definirObjeto(null);
 			} else {
-				ajuda.set("Alguns dos dados estão inválidos. Verifique os campos envoltos em vermelho.");
+				ajuda.set("Alguns dos dados estao invalidos. Verifique os campos envoltos em vermelho.");
 				return;
 			}			
 		} else {
